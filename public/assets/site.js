@@ -31,17 +31,62 @@
   /* Aparición al hacer scroll */
   const revealables = $$('.reveal, [data-steps]');
   if ('IntersectionObserver' in window && !reduced) {
+    // Se anima al entrar y se reinicia al salir, así hay movimiento al bajar y al subir.
+    // Si el elemento entra por arriba (al subir), aparece desde arriba.
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        io.unobserve(entry.target);
+        const el = entry.target;
+        const fromTop = entry.boundingClientRect.top < (entry.rootBounds ? entry.rootBounds.top : 0) + 10;
+        if (entry.isIntersecting) {
+          el.classList.toggle('from-top', fromTop);
+          el.classList.add('is-visible');
+        } else {
+          el.classList.remove('is-visible');
+          el.classList.toggle('from-top', entry.boundingClientRect.top < 0);
+        }
       });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: .12 });
+    }, { rootMargin: '0px 0px -6% 0px', threshold: .1 });
     revealables.forEach((el) => io.observe(el));
   } else {
     revealables.forEach((el) => el.classList.add('is-visible'));
   }
+
+  /* Barra de progreso, botón para subir y parallax */
+  const progressBar = $('[data-progress]');
+  const toTop = $('[data-totop]');
+  const ring = toTop ? $('circle.ring-value', toTop) : null;
+  const parallax = reduced ? [] : $$('[data-parallax]');
+  const heroCopy = reduced ? null : $('.hero-copy');
+  let ticking = false;
+  const onScrollFx = () => {
+    ticking = false;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const ratio = max > 0 ? Math.min(1, scrollY / max) : 0;
+    if (progressBar) progressBar.style.transform = `scaleX(${ratio})`;
+    if (toTop) {
+      toTop.classList.toggle('is-on', scrollY > 600);
+      if (ring) ring.style.strokeDashoffset = String(113.1 * (1 - ratio));
+    }
+    parallax.forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > innerHeight + 200) return;
+      const speed = parseFloat(el.dataset.parallax) || .15;
+      const offset = (r.top + r.height / 2 - innerHeight / 2) * -speed;
+      el.style.setProperty('--py', offset.toFixed(1) + 'px');
+    });
+    if (heroCopy && scrollY < innerHeight) {
+      const k = scrollY / innerHeight;
+      heroCopy.style.transform = `translateY(${k * 90}px)`;
+      heroCopy.style.opacity = String(1 - k * 1.1);
+    }
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScrollFx); } }, { passive: true });
+  addEventListener('resize', onScrollFx);
+  onScrollFx();
+  toTop?.addEventListener('click', () => {
+    scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    $('#principal')?.focus({ preventScroll: true });
+  });
 
   /* Contadores animados: "+150" o "100%"; los valores sin número se muestran tal cual */
   const counters = $$('[data-count]');
@@ -63,7 +108,7 @@
   };
   if ('IntersectionObserver' in window) {
     const cio = new IntersectionObserver((entries) => entries.forEach((en) => {
-      if (en.isIntersecting) { animateCount(en.target); cio.unobserve(en.target); }
+      if (en.isIntersecting) animateCount(en.target);
     }), { threshold: .6 });
     counters.forEach((c) => cio.observe(c));
   }

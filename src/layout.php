@@ -39,6 +39,7 @@ function page_header(string $title, string $description, string $active = '', st
 <body class="<?= e($bodyClass) ?>" data-whatsapp="<?= e($wa) ?>" data-order-endpoint="<?= url('pedido.php') ?>">
 <a class="skip" href="#principal">Saltar al contenido</a>
 
+<div class="scroll-progress" aria-hidden="true"><span data-progress></span></div>
 <header class="topbar" data-topbar>
   <div class="wrap topbar-inner">
     <a class="logo" href="<?= url('./') ?>" aria-label="RedTech, inicio">
@@ -117,6 +118,11 @@ function page_footer(): void
     <p>Fotografías ilustrativas.</p>
   </div>
 </footer>
+
+<button class="to-top" type="button" data-totop aria-label="Volver arriba">
+  <svg class="to-top-ring" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" class="ring-track"/><circle cx="20" cy="20" r="18" class="ring-value"/></svg>
+  <?= icon('flecha', 'icon to-top-arrow') ?>
+</button>
 
 <?php if ($wa !== ''): ?>
   <a class="wa-float" href="<?= e($wa) ?>" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp"><?= icon('whatsapp') ?></a>

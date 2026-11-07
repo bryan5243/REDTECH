@@ -132,6 +132,27 @@ function whatsapp_link(string $message = ''): string
     return 'https://wa.me/' . $number . ($message !== '' ? '?text=' . rawurlencode($message) : '');
 }
 
+/** Dirección del mapa insertado de Google Maps: un enlace "embed" o, si no, una búsqueda por dirección. */
+function map_embed_src(): string
+{
+    $value = trim(setting('map_embed'));
+    if (str_starts_with($value, 'https://www.google.com/maps/embed')) {
+        return $value;
+    }
+    $query = $value !== '' ? $value : setting('location');
+    return $query === '' ? '' : 'https://www.google.com/maps?q=' . rawurlencode($query) . '&z=15&output=embed';
+}
+
+function map_directions_url(): string
+{
+    if (setting('map_url') !== '') {
+        return setting('map_url');
+    }
+    $value = trim(setting('map_embed'));
+    $query = $value !== '' && !str_starts_with($value, 'http') ? $value : setting('location');
+    return 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode($query);
+}
+
 function csrf_token(): string
 {
     if (empty($_SESSION['csrf'])) {
@@ -161,10 +182,11 @@ function image_src(string $url, int $width, int $height): string
 }
 
 /** Imagen adaptable con srcset para Unsplash; una ruta local se usa tal cual. */
-function picture(array $image, string $sizes, int $width, int $height, bool $eager = false, string $class = ''): string
+function picture(array $image, string $sizes, int $width, int $height, bool $eager = false, string $class = '', ?float $parallax = null): string
 {
     $attributes = 'alt="' . e($image['alt'] ?? '') . '" width="' . $width . '" height="' . $height . '" sizes="' . e($sizes) . '"'
         . ($class !== '' ? ' class="' . e($class) . '"' : '')
+        . ($parallax !== null ? ' data-parallax="' . $parallax . '"' : '')
         . ($eager ? ' fetchpriority="high"' : ' loading="lazy"') . ' decoding="async"';
     $src = (string) ($image['url'] ?? '');
 

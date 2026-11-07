@@ -19,10 +19,10 @@ page_header(
     'page-home'
 );
 ?>
-<main id="principal">
+<main id="principal" tabindex="-1">
   <section class="hero" aria-labelledby="titulo">
     <div class="hero-bg" aria-hidden="true">
-      <?= picture($images['hero'], '100vw', 1900, 1100, true) ?>
+      <?= picture($images['hero'], '100vw', 1900, 1100, true, 'hero-photo', 0.25) ?>
       <canvas class="hero-net" data-network></canvas>
       <div class="hero-grid-lines"></div>
     </div>
@@ -91,7 +91,7 @@ page_header(
       <div class="services">
         <?php $i = 0; foreach ($content['services'] as $key => $service): ?>
           <article id="<?= e($key) ?>" class="service reveal" style="--i:<?= $i++ ?>">
-            <div class="service-media"><?= picture($images[$key], '(min-width: 1000px) 400px, (min-width: 700px) 50vw, 100vw', 800, 560) ?></div>
+            <div class="service-media"><?= picture($images[$key], '(min-width: 1000px) 400px, (min-width: 700px) 50vw, 100vw', 800, 560, false, 'px-img', 0.05) ?></div>
             <div class="service-body">
               <span class="service-icon"><?= icon($key) ?></span>
               <h3><?= e($service['name']) ?></h3>
@@ -144,8 +144,8 @@ page_header(
 
   <section id="nosotros" class="section" aria-labelledby="nosotros-titulo">
     <div class="wrap split">
-      <div class="split-media reveal">
-        <?= picture($images['nosotros'], '(min-width: 1000px) 560px, 100vw', 1000, 1100) ?>
+      <div class="split-media reveal reveal-left">
+        <?= picture($images['nosotros'], '(min-width: 1000px) 560px, 100vw', 1000, 1100, false, 'px-img', 0.06) ?>
         <div class="split-badge"><?= icon('escudo') ?><span>Trabajo ordenado, documentado y con soporte</span></div>
       </div>
       <div>
@@ -156,7 +156,7 @@ page_header(
         </header>
         <ul class="reasons">
           <?php foreach ($content['reasons'] as $i => $reason): ?>
-            <li class="reveal" style="--i:<?= $i ?>">
+            <li class="reveal reveal-right" style="--i:<?= $i ?>">
               <span class="reason-mark" aria-hidden="true"><?= icon('check') ?></span>
               <div><h3><?= e($reason['title']) ?></h3><p><?= e($reason['text']) ?></p></div>
             </li>
@@ -192,8 +192,8 @@ page_header(
       </header>
       <div class="sectors">
         <?php foreach ($content['sectors'] as $i => $sector): ?>
-          <article class="sector reveal" style="--i:<?= $i ?>">
-            <?= picture($images[$sector['image']], '(min-width: 1000px) 300px, (min-width: 600px) 50vw, 100vw', 600, 760) ?>
+          <article class="sector reveal reveal-zoom" style="--i:<?= $i ?>">
+            <?= picture($images[$sector['image']], '(min-width: 1000px) 300px, (min-width: 600px) 50vw, 100vw', 600, 760, false, 'px-img', 0.08) ?>
             <h3><?= e($sector['name']) ?></h3>
           </article>
         <?php endforeach; ?>
@@ -254,7 +254,6 @@ page_header(
           <li>
             <span class="contact-icon"><?= icon('ubicacion') ?></span>
             <div><small>Ubicación</small><span><?= e($location['value']) ?><?= (int) $location['confirmed'] === 1 ? '' : ' ' . $pending ?></span>
-              <?php if (setting('map_url') !== ''): ?><a class="map-link" href="<?= e(setting('map_url')) ?>" target="_blank" rel="noopener">Ver en el mapa</a><?php endif; ?>
             </div>
           </li>
         </ul>
@@ -307,6 +306,24 @@ page_header(
         </form>
       <?php endif; ?>
     </div>
+    <?php $mapSrc = map_embed_src(); if ($mapSrc !== ''): ?>
+      <div class="wrap">
+        <div class="map-card reveal">
+          <div class="map-frame">
+            <iframe src="<?= e($mapSrc) ?>" title="Mapa de ubicación de RedTech" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          </div>
+          <div class="map-info">
+            <span class="contact-icon"><?= icon('ubicacion') ?></span>
+            <div>
+              <small>Visítanos</small>
+              <strong><?= e($site['settings']['location']['value']) ?></strong>
+              <?php $schedule = $site['settings']['schedule'] ?? null; if ($schedule && $schedule['value'] !== ''): ?><span><?= e($schedule['value']) ?></span><?php endif; ?>
+            </div>
+            <a class="btn btn-primary" href="<?= e(map_directions_url()) ?>" target="_blank" rel="noopener">Cómo llegar <?= icon('flecha') ?></a>
+          </div>
+        </div>
+      </div>
+    <?php endif; ?>
   </section>
 </main>
 <?php page_footer(); ?>

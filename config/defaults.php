@@ -11,6 +11,9 @@ return [
         'instagram' => ['value' => '', 'confirmed' => 1],
         'map_url' => ['value' => '', 'confirmed' => 1],
         'tiktok' => ['value' => '', 'confirmed' => 1],
+        // Mapa de Contacto: una dirección (ej. "Av. 25 de Junio y Guayas, Machala") o el enlace
+        // "Insertar un mapa" de Google Maps (https://www.google.com/maps/embed?...). Vacío: usa la ubicación.
+        'map_embed' => ['value' => '', 'confirmed' => 1],
         // Número de WhatsApp para pedidos, solo dígitos con código de país (ej. 593991234567).
         // Vacío: el carrito avisa que falta configurarlo y el botón flotante no aparece.
         'whatsapp' => ['value' => '', 'confirmed' => 1],

@@ -12,7 +12,8 @@ $settingFields = [
     'whatsapp' => ['WhatsApp para pedidos', 'Solo números con código de país. Ej.: 593991234567', false],
     'location' => ['Ubicación', 'Ciudad, provincia y país', true],
     'schedule' => ['Horario de atención', 'Ej.: Lunes a viernes, 08:00 a 18:00', true],
-    'map_url' => ['Enlace de Google Maps', 'https://maps.google.com/...', false],
+    'map_embed' => ['Mapa en Contacto: dirección o enlace «Insertar un mapa»', 'Av. 25 de Junio y Guayas, Machala  o  https://www.google.com/maps/embed?...', false],
+    'map_url' => ['Enlace «Cómo llegar» (opcional)', 'https://maps.app.goo.gl/...', false],
     'facebook' => ['Facebook', 'https://facebook.com/...', false],
     'instagram' => ['Instagram', 'https://instagram.com/...', false],
     'tiktok' => ['TikTok', 'https://tiktok.com/@...', false],
@@ -29,6 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $value = trim(mb_substr((string) ($_POST['s'][$key] ?? ''), 0, 500));
             if ($key === 'whatsapp') {
                 $value = preg_replace('/\D/', '', $value);
+            } elseif ($key === 'map_embed' && preg_match('#src="(https://www\.google\.com/maps/embed[^"]+)"#', $value, $m)) {
+                // Si pegan el código <iframe> completo, guardamos solo la dirección.
+                $value = html_entity_decode($m[1]);
             } elseif ($value !== '' && in_array($key, ['map_url', 'facebook', 'instagram', 'tiktok'], true) && !preg_match('#^https?://#i', $value)) {
                 $value = 'https://' . $value;
             }
