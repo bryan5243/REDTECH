@@ -26,6 +26,11 @@ foreach ($defaults['settings'] as $key => $setting) {
     $insertSetting->execute([$key, $setting['value'], $setting['confirmed']]);
 }
 
+$insertImage = $pdo->prepare('INSERT IGNORE INTO images (slot, url, alt) VALUES (?, ?, ?)');
+foreach ($defaults['images'] as $slot => $image) {
+    $insertImage->execute([$slot, $image['url'], $image['alt']]);
+}
+
 if ((int) $pdo->query('SELECT COUNT(*) FROM contacts')->fetchColumn() === 0) {
     $insert = $pdo->prepare('INSERT INTO contacts (type, label, value, confirmed, sort_order) VALUES (?, ?, ?, ?, ?)');
     foreach ($defaults['contacts'] as $i => $contact) {

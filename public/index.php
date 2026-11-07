@@ -19,7 +19,7 @@ $interests = [];
 foreach ($content['services'] as $key => $service) {
     $interests[$key] = $service['name'];
 }
-$interests['tienda'] = 'Productos de la tienda';
+$interests['tienda'] = 'Equipos';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = handle_quote($_POST, $interests);

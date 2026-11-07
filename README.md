@@ -28,9 +28,12 @@ Hasta que exista el panel de administración, estos datos se editan en MySQL (po
 |---|---|
 | Teléfonos y correos | `contacts` |
 | Cifras de la empresa | `stats` |
-| Ubicación | `settings` |
+| Ubicación, redes sociales y mapa | `settings` |
+| Fotos de portada, servicios y equipos | `images` |
 
 Cada fila tiene una columna `confirmed`. Con `0`, el sitio muestra la marca "por confirmar" y no crea enlaces de llamada ni de correo; con `1`, publica el dato normalmente. Usa `active = 0` para ocultar una fila de `contacts` o `stats`.
+
+Para cambiar una foto, edita `url` en `images`: admite una dirección completa o una ruta local como `assets/img/foto.webp`. Consulta `CREDITS.md`. Los textos de servicios, proceso y preguntas están en `src/content.php`; cuando estén revisados, usa `'texts_confirmed' => true`, y `'show_placeholders' => false` para quitar los espacios de certificaciones y testimonios. El botón de WhatsApp solo aparece cuando hay un teléfono con `confirmed = 1`, y los enlaces de Facebook, Instagram y mapa, cuando esos valores no están vacíos.
 
 Las solicitudes de cotización se guardan en la tabla `quote_requests`.
 
