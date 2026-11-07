@@ -37,6 +37,8 @@ Confirmado por el propietario:
 - Tienda virtual con productos como cables, servidores, routers y cámaras.
 - Parte administrativa para la tienda.
 - Información editable sin tocar el código: teléfonos, correos y cifras de la empresa (por ejemplo, proyectos instalados, soporte y equipos certificados).
+- La tienda vende por WhatsApp: el carrito arma el pedido y abre WhatsApp con el mensaje listo (pedido del 7 de noviembre de 2026).
+- Diseño profesional, empresarial, dinámico y con imágenes de productos. Sin selector Empresa/Hogar (el propietario pidió quitarlo).
 
 Presente en el sitio actual, pendiente de confirmación:
 
@@ -47,7 +49,7 @@ Sin decidir:
 
 - Lista completa de servicios y cómo se solicitan.
 - Catálogo detallado de la tienda: marcas, referencias, precios y existencias.
-- Métodos de pago, envíos e impuestos.
+- Métodos de pago, envíos e impuestos (por ahora se coordinan por WhatsApp).
 - Alcance exacto de la administración, más allá de los datos editables indicados (por ejemplo, pedidos o usuarios).
 - Idiomas del sitio.
 - Migración del dominio y del contenido actuales.

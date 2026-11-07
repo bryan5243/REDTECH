@@ -15,3 +15,9 @@ Las fotografías actuales son ilustrativas: no muestran trabajos ni productos de
 | `producto_servidores` | `photo-1698668975271-2ba9a323be6b` |
 | `producto_routers` | `photo-1606904825846-647eb07f5be2` |
 | `producto_camaras` | `photo-1589935447067-5531094415d1` |
+
+Los productos de ejemplo de la tienda (`config/catalog.php`) reutilizan estas mismas fotos. Reemplázalas desde el panel por fotos reales de tus productos.
+
+## Fuentes
+
+- Sora e Inter, de Google Fonts, bajo la SIL Open Font License 1.1. Archivos en `public/assets/fonts/`.

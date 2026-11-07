@@ -1,60 +1,61 @@
 <?php
-
-// Textos de la página. Teléfonos, correos, cifras e imágenes no van aquí: son datos editables.
-// Con 'texts_confirmed' => false, el sitio marca estos textos como "por confirmar".
-// Con 'show_placeholders' => false, desaparecen los espacios de certificaciones y testimonios.
+// Textos del sitio. Son una propuesta inicial: revísalos y ajústalos a tu empresa.
+// Los datos de contacto, cifras, fotos y productos se editan desde /admin.
 
 return [
-    'texts_confirmed' => false,
-    'show_placeholders' => true,
-    'lead' => [
-        'empresa' => 'Cableado estructurado, cámaras de seguridad y servidores para la operación de tu empresa.',
-        'hogar' => 'Cableado estructurado, cámaras de seguridad y servidores para la red y la seguridad de tu casa.',
+    'hero' => [
+        'eyebrow' => 'Integrador tecnológico',
+        'title_before' => 'Infraestructura de',
+        'rotating' => ['redes', 'seguridad', 'servidores'],
+        'title_after' => 'lista para crecer',
+        'lead' => 'Diseñamos, instalamos y mantenemos cableado estructurado, cámaras de seguridad y servidores. Y te vendemos los equipos para cada proyecto.',
     ],
+    'marquee' => ['Cableado Cat6 y Cat6A', 'Fibra óptica', 'Cámaras IP', 'Grabadores NVR', 'Servidores', 'Almacenamiento NAS', 'Routers', 'Switches PoE', 'Wi-Fi profesional', 'Racks y gabinetes', 'Soporte técnico'],
     'services' => [
         'cableado' => [
             'name' => 'Cableado estructurado',
-            'detail' => 'Instalamos la red de datos que conecta tus equipos, con cable en los puntos donde lo necesitas.',
-            'empresa_detail' => 'Oficinas, bodegas y plantas industriales.',
-            'hogar_detail' => 'Conexión por cable en las habitaciones donde más la usas.',
+            'detail' => 'Redes de datos ordenadas, etiquetadas y documentadas, listas para crecer con tu operación.',
+            'items' => ['Cableado Cat6, Cat6A y fibra óptica', 'Racks, patch panels y organización', 'Certificación y etiquetado de puntos'],
         ],
         'camaras' => [
             'name' => 'Cámaras de seguridad',
-            'detail' => 'Instalamos y configuramos cámaras de seguridad en las zonas que quieres vigilar.',
-            'empresa_detail' => 'Accesos, áreas de trabajo y zonas de almacenamiento.',
-            'hogar_detail' => 'Entradas, patios y las zonas de la casa que quieras proteger.',
+            'detail' => 'Videovigilancia IP con grabación continua y acceso desde tu celular, donde estés.',
+            'items' => ['Cámaras IP interiores y exteriores', 'Grabadores NVR y almacenamiento', 'Monitoreo remoto desde la app'],
         ],
         'servidores' => [
             'name' => 'Servidores',
-            'detail' => 'Instalamos y configuramos servidores según lo que necesitas guardar y compartir.',
-            'empresa_detail' => 'Aplicaciones y archivos compartidos por tu equipo.',
-            'hogar_detail' => 'Fotos, documentos y copias de tus archivos en un solo lugar.',
+            'detail' => 'Servidores y almacenamiento para tus aplicaciones, archivos y copias de seguridad.',
+            'items' => ['Instalación y configuración', 'Almacenamiento NAS y respaldos', 'Virtualización y mantenimiento'],
         ],
     ],
+    'extras' => [
+        ['icon' => 'wifi', 'name' => 'Redes y Wi-Fi', 'text' => 'Cobertura inalámbrica estable en toda tu instalación, con puntos de acceso profesionales.'],
+        ['icon' => 'soporte', 'name' => 'Soporte y mantenimiento', 'text' => 'Revisiones preventivas y atención cuando algo falla, para que tu red no se detenga.'],
+        ['icon' => 'tienda', 'name' => 'Venta de equipos', 'text' => 'Cables, servidores, routers y cámaras con asesoría para elegir lo que de verdad necesitas.'],
+    ],
     'reasons' => [
-        ['title' => 'Servicios y equipos juntos', 'text' => 'Red, seguridad y servidores, además de los equipos para cada uno.'],
-        ['title' => 'Para empresas y hogares', 'text' => 'Atendemos tanto instalaciones empresariales como domésticas.'],
-        ['title' => 'Cotización según tu caso', 'text' => 'Nos cuentas qué necesitas y preparamos una propuesta para ti.'],
+        ['title' => 'Un solo proveedor', 'text' => 'Red, seguridad, servidores y equipos con el mismo equipo técnico de principio a fin.'],
+        ['title' => 'Instalaciones ordenadas', 'text' => 'Trabajo limpio, etiquetado y documentado para que tu red sea fácil de mantener.'],
+        ['title' => 'Asesoría honesta', 'text' => 'Te recomendamos lo que tu proyecto necesita, sin equipos que no vas a usar.'],
+        ['title' => 'Acompañamiento', 'text' => 'Seguimos contigo después de la instalación con soporte y mantenimiento.'],
     ],
     'steps' => [
-        ['title' => 'Nos cuentas qué necesitas', 'text' => 'Completa el formulario con tu necesidad y tus datos de contacto.'],
-        ['title' => 'Preparamos tu cotización', 'text' => 'Revisamos tu caso y te respondemos con una propuesta.'],
-        ['title' => 'Coordinamos la instalación', 'text' => 'Si la aceptas, acordamos contigo los siguientes pasos.'],
+        ['title' => 'Diagnóstico', 'text' => 'Nos cuentas tu necesidad y, si hace falta, visitamos el lugar.'],
+        ['title' => 'Propuesta', 'text' => 'Te enviamos una cotización clara con equipos y tiempos.'],
+        ['title' => 'Instalación', 'text' => 'Ejecutamos el proyecto de forma ordenada y documentada.'],
+        ['title' => 'Soporte', 'text' => 'Te acompañamos con mantenimiento y atención técnica.'],
     ],
     'sectors' => [
-        'empresas' => ['name' => 'Empresas', 'items' => ['Oficinas', 'Bodegas', 'Plantas industriales']],
-        'hogares' => ['name' => 'Hogares', 'items' => ['Red de datos en casa', 'Cámaras de seguridad', 'Almacenamiento de archivos']],
+        ['image' => 'empresas', 'name' => 'Oficinas y corporativos'],
+        ['image' => 'servidores', 'name' => 'Industria y bodegas'],
+        ['image' => 'nosotros', 'name' => 'Comercios y locales'],
+        ['image' => 'hogares', 'name' => 'Hogares y residencias'],
     ],
     'faq' => [
-        ['q' => '¿Cómo pido una cotización?', 'a' => 'Completa el formulario con tu nombre, un teléfono o correo y lo que necesitas. Te contactaremos para continuar.'],
-        ['q' => '¿Atienden a empresas y a hogares?', 'a' => 'Sí. Puedes elegir "Empresa" u "Hogar" en esta página para ver el caso que te corresponde.'],
-        ['q' => '¿Puedo comprar equipos sin contratar una instalación?', 'a' => 'Estamos preparando el catálogo en línea. Mientras tanto, dinos qué equipo buscas y te responderemos.'],
-        ['q' => '¿Qué equipos ofrecen?', 'a' => 'Cables, servidores, routers y cámaras. Consúltanos por el equipo que necesitas.'],
-    ],
-    'products' => [
-        'cables' => ['name' => 'Cables', 'text' => 'Para tu red de datos.'],
-        'servidores' => ['name' => 'Servidores', 'text' => 'Para guardar y compartir información.'],
-        'routers' => ['name' => 'Routers', 'text' => 'Para conectar tu red a internet.'],
-        'camaras' => ['name' => 'Cámaras', 'text' => 'Para vigilar las zonas que necesitas.'],
+        ['q' => '¿Cómo pido una cotización?', 'a' => 'Completa el formulario de contacto o escríbenos por WhatsApp contándonos qué necesitas. Te responderemos con una propuesta.'],
+        ['q' => '¿Cómo compro en la tienda?', 'a' => 'Agrega los productos al carrito y pulsa "Enviar pedido por WhatsApp". Se abrirá un mensaje con tu pedido listo para enviar y coordinamos contigo el pago y la entrega.'],
+        ['q' => '¿Puedo comprar equipos sin contratar la instalación?', 'a' => 'Sí. Puedes comprar solo los equipos o pedirnos también la instalación y configuración.'],
+        ['q' => '¿Atienden a empresas y a hogares?', 'a' => 'Sí. Trabajamos en oficinas, industrias, comercios y viviendas.'],
+        ['q' => '¿Ofrecen mantenimiento después de la instalación?', 'a' => 'Sí. Ofrecemos soporte técnico y mantenimiento preventivo para tu red, cámaras y servidores.'],
     ],
 ];

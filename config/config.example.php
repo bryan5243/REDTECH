@@ -10,4 +10,7 @@ return [
         'user' => 'redtech_user',
         'pass' => '',
     ],
+    // Clave para crear el primer administrador en /admin. Usa una frase larga y
+    // bórrala de aquí cuando ya tengas tu usuario.
+    'admin_setup_key' => '',
 ];

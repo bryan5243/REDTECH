@@ -3,6 +3,18 @@
 declare(strict_types=1);
 
 /** Valida y guarda una solicitud. Devuelve los errores por campo; vacío si se guardó. */
+function quote_interests(): array
+{
+    return [
+        'cableado' => 'Cableado estructurado',
+        'camaras' => 'Cámaras de seguridad',
+        'servidores' => 'Servidores',
+        'redes' => 'Redes y Wi-Fi',
+        'soporte' => 'Soporte y mantenimiento',
+        'tienda' => 'Compra de equipos',
+    ];
+}
+
 function handle_quote(array $input, array $allowedInterests): array
 {
     $old = [
@@ -10,14 +22,13 @@ function handle_quote(array $input, array $allowedInterests): array
         'phone' => trim((string) ($input['phone'] ?? '')),
         'email' => trim((string) ($input['email'] ?? '')),
         'company' => trim((string) ($input['company'] ?? '')),
-        'para' => ($input['para'] ?? '') === 'hogar' ? 'hogar' : 'empresa',
         'interest' => (string) ($input['interest'] ?? ''),
         'message' => trim((string) ($input['message'] ?? '')),
     ];
     $_SESSION['quote_old'] = $old;
     $errors = [];
 
-    if (!hash_equals($_SESSION['csrf'] ?? '', (string) ($input['csrf'] ?? ''))) {
+    if (!csrf_valid($input['csrf'] ?? null)) {
         return ['form' => 'Tu sesión caducó. Revisa tus datos y vuelve a enviar.'];
     }
     // Campo trampa: los visitantes reales no lo ven. A los bots se les responde como si nada.
@@ -55,14 +66,13 @@ function handle_quote(array $input, array $allowedInterests): array
 
     try {
         $pdo->prepare(
-            'INSERT INTO quote_requests (name, phone, email, company, customer_type, interest, message)
-             VALUES (?, ?, ?, ?, ?, ?, ?)'
+            'INSERT INTO quote_requests (name, phone, email, company, interest, message)
+             VALUES (?, ?, ?, ?, ?, ?)'
         )->execute([
             $old['name'],
             $old['phone'] ?: null,
             $old['email'] ?: null,
             $old['company'] ?: null,
-            $old['para'],
             $old['interest'],
             $old['message'] ?: null,
         ]);

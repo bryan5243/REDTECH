@@ -45,4 +45,34 @@ if ((int) $pdo->query('SELECT COUNT(*) FROM stats')->fetchColumn() === 0) {
     }
 }
 
-echo "Base de datos lista.\n";
+// Migración: versiones anteriores guardaban "empresa/hogar" en las cotizaciones.
+$column = $pdo->query("SHOW COLUMNS FROM quote_requests LIKE 'customer_type'")->fetch();
+if ($column) {
+    $pdo->exec('ALTER TABLE quote_requests DROP COLUMN customer_type');
+}
+$pdo->exec('ALTER TABLE settings MODIFY setting_value VARCHAR(500) NOT NULL');
+
+// Catálogo de ejemplo: solo si todavía no hay categorías.
+if ((int) $pdo->query('SELECT COUNT(*) FROM categories')->fetchColumn() === 0) {
+    $catalog = require __DIR__ . '/../config/catalog.php';
+    $insertCategory = $pdo->prepare('INSERT INTO categories (slug, name, description, image, sort_order) VALUES (?, ?, ?, ?, ?)');
+    $ids = [];
+    foreach ($catalog['categories'] as $i => $category) {
+        $insertCategory->execute([$category['slug'], $category['name'], $category['description'], $category['image'], $i]);
+        $ids[$category['slug']] = (int) $pdo->lastInsertId();
+    }
+    $insertProduct = $pdo->prepare(
+        'INSERT INTO products (category_id, slug, name, brand, summary, description, specs, price, stock, image, gallery, featured, sort_order)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    );
+    foreach ($catalog['products'] as $i => $product) {
+        $insertProduct->execute([
+            $ids[$product['category']], $product['slug'], $product['name'], $product['brand'], $product['summary'],
+            $product['description'], $product['specs'], $product['price'], $product['stock'], $product['image'],
+            implode("\n", $product['gallery']), $product['featured'], $i,
+        ]);
+    }
+    echo "Catálogo de ejemplo cargado.\n";
+}
+
+echo "Base de datos lista. Entra a /admin para crear tu usuario (usa admin_setup_key de config/config.php).\n";

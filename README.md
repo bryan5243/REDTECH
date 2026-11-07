@@ -1,44 +1,67 @@
 # RedTech
 
-Sitio web de RedTech en PHP puro y MySQL. Por ahora incluye la página de inicio con su formulario de cotización.
+Sitio web y tienda de RedTech en PHP puro y MySQL:
 
-## Ver el sitio en local
+- **Inicio** (`public/index.php`): servicios, equipos destacados, proceso, sectores, preguntas frecuentes y formulario de cotización.
+- **Tienda** (`public/tienda.php`, `public/producto.php`): catálogo con categorías, búsqueda, orden y ficha de producto.
+- **Carrito por WhatsApp**: el cliente arma su pedido y lo envía por WhatsApp con un mensaje ya escrito. El pedido también queda guardado en el panel.
+- **Panel de administración** (`public/admin/`): productos, categorías, pedidos, cotizaciones, teléfonos, correos, cifras, fotos y número de WhatsApp.
+
+## Ver el sitio en tu computadora
 
 ```bash
 php -S localhost:8000 -t public
 ```
 
-Abre http://localhost:8000. Sin MySQL, el sitio muestra los datos de `config/defaults.php`, pero el formulario no puede guardar solicitudes.
+Abre http://localhost:8000. Sin MySQL, el sitio muestra el catálogo de ejemplo de `config/catalog.php` y los datos de `config/defaults.php`, pero no guarda cotizaciones ni pedidos y el panel no funciona.
 
 ## Conectar MySQL
 
-1. Crea la base de datos y su usuario.
-2. Copia `config/config.example.php` como `config/config.php` y completa los datos.
-3. Ejecuta el instalador:
+1. Crea la base de datos y su usuario (en cPanel: **Bases de datos MySQL**).
+2. Copia `config/config.example.php` como `config/config.php` y completa los datos de MySQL.
+3. En el mismo archivo, escribe una clave larga en `admin_setup_key`.
+4. Ejecuta el instalador (en cPanel puedes usar **Terminal**):
 
 ```bash
 php database/install.php
 ```
 
-## Editar teléfonos, correos y cifras
+El instalador crea las tablas y carga el catálogo de ejemplo. Se puede repetir sin borrar tus datos.
 
-Hasta que exista el panel de administración, estos datos se editan en MySQL (por ejemplo, con phpMyAdmin):
+## Panel de administración
 
-| Dato | Tabla |
+1. Entra a `/admin/`.
+2. La primera vez te pedirá la clave `admin_setup_key`, un usuario y una contraseña de al menos 10 caracteres.
+3. Ya con tu usuario, borra `admin_setup_key` de `config/config.php`.
+
+Desde el panel puedes:
+
+| Sección | Qué haces |
 |---|---|
-| Teléfonos y correos | `contacts` |
-| Cifras de la empresa | `stats` |
-| Ubicación, redes sociales y mapa | `settings` |
-| Fotos de portada, servicios y equipos | `images` |
+| Productos | Crear, editar, ocultar, destacar y eliminar productos; subir fotos y galería; precio (vacío = «precio a consultar») y disponibilidad. |
+| Categorías | Crear y ordenar categorías de la tienda. |
+| Pedidos | Ver los pedidos enviados por WhatsApp y marcarlos como atendidos. |
+| Cotizaciones | Ver las solicitudes del formulario y responder por WhatsApp. |
+| Datos del sitio | Número de WhatsApp, teléfonos, correos, ubicación, horario, redes sociales, cifras, fotos del sitio y tu contraseña. |
 
-Cada fila tiene una columna `confirmed`. Con `0`, el sitio muestra la marca "por confirmar" y no crea enlaces de llamada ni de correo; con `1`, publica el dato normalmente. Usa `active = 0` para ocultar una fila de `contacts` o `stats`.
+Lo que no marques como **confirmado** aparece con la etiqueta «por confirmar» y sin enlaces. El botón flotante y el carrito de WhatsApp funcionan cuando hay un número de WhatsApp o un teléfono confirmado.
 
-Para cambiar una foto, edita `url` en `images`: admite una dirección completa o una ruta local como `assets/img/foto.webp`. Consulta `CREDITS.md`. Los textos de servicios, proceso y preguntas están en `src/content.php`; cuando estén revisados, usa `'texts_confirmed' => true`, y `'show_placeholders' => false` para quitar los espacios de certificaciones y testimonios. El botón de WhatsApp solo aparece cuando hay un teléfono con `confirmed = 1`, y los enlaces de Facebook, Instagram y mapa, cuando esos valores no están vacíos.
-
-Las solicitudes de cotización se guardan en la tabla `quote_requests`.
+**Antes de publicar:** carga tus productos reales, revisa los textos de `src/content.php` y desmarca el aviso «Catálogo de demostración» en Datos del sitio.
 
 ## Publicar en cPanel
 
-1. Copia el contenido de `public/` en `public_html/`.
+1. Copia el contenido de `public/` en `public_html/` (incluida la carpeta `uploads/` con su `.htaccess`).
 2. Copia `config/`, `src/` y `database/` junto a `public_html/`, fuera de esa carpeta.
-3. Crea `config/config.php` en el servidor y ejecuta el instalador por SSH.
+3. Crea `config/config.php` en el servidor y ejecuta el instalador.
+4. Comprueba que `public_html/uploads/` tenga permisos de escritura para subir fotos.
+
+## Seguridad
+
+- Contraseñas con `password_hash`, sesión que caduca a las 2 horas y bloqueo de 15 minutos tras 5 intentos fallidos.
+- Todos los formularios llevan token CSRF y las consultas usan sentencias preparadas.
+- Las fotos subidas se validan como imagen real (JPG, PNG, WEBP o GIF, máximo 4 MB), se guardan con nombre aleatorio y `uploads/.htaccess` impide ejecutar código ahí.
+- Los totales de los pedidos se calculan en el servidor con los precios del catálogo.
+
+## Fuentes e imágenes
+
+Las fuentes Sora e Inter están en `public/assets/fonts/` (licencia SIL Open Font License). Las fotos de ejemplo vienen de Unsplash: ver `CREDITS.md`.

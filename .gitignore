@@ -1,7 +1,8 @@
 # Credenciales y datos locales
 config/config.php
 .env
-public/uploads/
+public/uploads/*
+!public/uploads/.htaccess
 
 # Herramientas locales
 .impeccable/questions/
