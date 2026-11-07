@@ -16,6 +16,7 @@ function nav_links(): array
 function page_header(string $title, string $description, string $active = '', string $bodyClass = ''): void
 {
     $wa = whatsapp_number();
+    [$logoClass, $logoHtml] = site_logo();
     ?>
 <!doctype html>
 <html lang="es">
@@ -24,7 +25,7 @@ function page_header(string $title, string $description, string $active = '', st
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= e($title) ?></title>
   <meta name="description" content="<?= e($description) ?>">
-  <meta name="theme-color" content="#06142b">
+  <meta name="theme-color" content="<?= e(brand_colors()['color_dark']) ?>">
   <meta property="og:title" content="<?= e($title) ?>">
   <meta property="og:description" content="<?= e($description) ?>">
   <meta property="og:type" content="website">
@@ -33,8 +34,9 @@ function page_header(string $title, string $description, string $active = '', st
   <link rel="preload" href="<?= url('assets/fonts/sora-latin.woff2') ?>" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="<?= url('assets/fonts/inter-latin.woff2') ?>" as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="<?= url('assets/img/favicon.svg') ?>" type="image/svg+xml">
-  <link rel="stylesheet" href="<?= url('assets/site.css') ?>?v=3">
-  <script src="<?= url('assets/site.js') ?>?v=3" defer></script>
+  <link rel="stylesheet" href="<?= url('assets/site.css') ?>?v=4">
+  <?= brand_style() ?>
+  <script src="<?= url('assets/site.js') ?>?v=4" defer></script>
 </head>
 <body class="<?= e($bodyClass) ?>" data-whatsapp="<?= e($wa) ?>" data-order-endpoint="<?= url('pedido.php') ?>">
 <a class="skip" href="#principal">Saltar al contenido</a>
@@ -42,10 +44,7 @@ function page_header(string $title, string $description, string $active = '', st
 <div class="scroll-progress" aria-hidden="true"><span data-progress></span></div>
 <header class="topbar" data-topbar>
   <div class="wrap topbar-inner">
-    <a class="logo" href="<?= url('./') ?>" aria-label="RedTech, inicio">
-      <span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-      <span class="logo-text">Red<b>Tech</b></span>
-    </a>
+    <a class="logo<?= $logoClass ?>" href="<?= url('./') ?>" aria-label="RedTech, inicio"><?= $logoHtml ?></a>
     <nav class="nav" aria-label="Principal" data-nav>
       <?php foreach (nav_links() as $key => [$href, $label]): ?>
         <a href="<?= e($href) ?>"<?= $key === $active ? ' aria-current="page"' : '' ?>><?= e($label) ?></a>
@@ -72,16 +71,14 @@ function page_footer(): void
     $categories = categories();
     $pending = '<span class="pending">por confirmar</span>';
     $wa = whatsapp_link('Hola RedTech, quiero más información.');
+    [$logoClass, $logoHtml] = site_logo();
     $socials = array_filter(['facebook' => 'Facebook', 'instagram' => 'Instagram', 'tiktok' => 'TikTok'], static fn ($k) => setting($k) !== '', ARRAY_FILTER_USE_KEY);
     ?>
 <footer class="footer">
   <div class="footer-glow" aria-hidden="true"></div>
   <div class="wrap footer-grid">
     <div class="footer-brand">
-      <a class="logo logo-light" href="<?= url('./') ?>">
-        <span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span class="logo-text">Red<b>Tech</b></span>
-      </a>
+      <a class="logo logo-light<?= $logoClass ?>" href="<?= url('./') ?>" aria-label="RedTech, inicio"><?= $logoHtml ?></a>
       <p>Cableado estructurado, cámaras de seguridad, servidores y equipos de red para empresas y hogares.</p>
       <?php if ($socials): ?>
         <div class="socials">

@@ -234,3 +234,76 @@ function icon(string $name, string $class = 'icon'): string
     ];
     return '<svg class="' . e($class) . '" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . ($paths[$name] ?? '') . '</svg>';
 }
+
+/** Colores de marca por defecto (los del diseño original). */
+const BRAND_DEFAULTS = ['color_primary' => '#1764ff', 'color_accent' => '#19c6e8', 'color_dark' => '#050f22'];
+
+/** Devuelve un color #rrggbb válido o null. */
+function valid_hex(string $value): ?string
+{
+    $value = strtolower(trim($value));
+    return preg_match('/^#[0-9a-f]{6}$/', $value) ? $value : null;
+}
+
+/** Mezcla dos colores #rrggbb; $amount es la proporción de $b (0 a 1). */
+function mix_hex(string $a, string $b, float $amount): string
+{
+    $out = '#';
+    for ($i = 1; $i < 7; $i += 2) {
+        $x = hexdec(substr($a, $i, 2));
+        $y = hexdec(substr($b, $i, 2));
+        $out .= str_pad(dechex((int) round($x + ($y - $x) * $amount)), 2, '0', STR_PAD_LEFT);
+    }
+    return $out;
+}
+
+/** Colores de marca actuales: los del panel o, si faltan, los originales. */
+function brand_colors(): array
+{
+    $colors = [];
+    foreach (BRAND_DEFAULTS as $key => $default) {
+        $colors[$key] = valid_hex(setting($key)) ?? $default;
+    }
+    return $colors;
+}
+
+/** <style> que reemplaza los colores del sitio cuando se cambiaron en el panel. */
+function brand_style(): string
+{
+    $c = brand_colors();
+    if ($c === BRAND_DEFAULTS) {
+        return '';
+    }
+    $vars = [
+        '--blue' => $c['color_primary'],
+        '--blue-600' => mix_hex($c['color_primary'], '#000000', .15),
+        '--cyan' => $c['color_accent'],
+        '--navy-950' => $c['color_dark'],
+        '--navy-900' => mix_hex($c['color_dark'], $c['color_primary'], .06),
+        '--navy-800' => mix_hex($c['color_dark'], $c['color_primary'], .14),
+        '--navy-700' => mix_hex($c['color_dark'], $c['color_primary'], .24),
+    ];
+    $css = '';
+    foreach ($vars as $name => $value) {
+        $css .= $name . ':' . $value . ';';
+    }
+    return '<style>:root{' . $css . '}</style>';
+}
+
+/**
+ * Contenido del logo: la imagen subida en el panel o, si no hay, el logo de texto.
+ * Devuelve [clases extra para el enlace, HTML interior].
+ */
+function site_logo(): array
+{
+    $main = setting('logo');
+    if ($main === '') {
+        return ['', '<span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i></span><span class="logo-text">Red<b>Tech</b></span>'];
+    }
+    $dark = setting('logo_dark');
+    $html = '<img class="logo-img logo-img-main" src="' . e(url($main)) . '" alt="RedTech">';
+    if ($dark !== '') {
+        $html .= '<img class="logo-img logo-img-dark" src="' . e(url($dark)) . '" alt="RedTech">';
+    }
+    return [$dark !== '' ? ' logo--img logo--dual' : ' logo--img', $html];
+}

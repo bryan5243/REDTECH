@@ -130,12 +130,13 @@ function admin_header(string $title, string $active = ''): void
   <meta name="robots" content="noindex, nofollow">
   <title><?= e($title) ?> | Panel RedTech</title>
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../assets/admin.css?v=1">
+  <link rel="stylesheet" href="../assets/admin.css?v=3">
+  <?= brand_style() ?>
 </head>
 <body class="<?= $user ? 'is-auth' : 'is-guest' ?>">
 <?php if ($user): ?>
   <header class="a-top">
-    <a class="a-logo" href="index.php"><span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Red<b>Tech</b></span> <small>Panel</small></a>
+    <a class="a-logo" href="index.php"><?= site_logo()[1] ?> <small>Panel</small></a>
     <nav class="a-nav" aria-label="Panel">
       <?php foreach ($links as $key => [$href, $label, $ico]): ?>
         <a href="<?= $href ?>"<?= $key === $active ? ' aria-current="page"' : '' ?>><?= icon($ico) ?><span><?= $label ?></span></a>
@@ -160,7 +161,7 @@ function admin_footer(): void
 <script>
 document.querySelectorAll('[data-confirm]').forEach(f => f.addEventListener('submit', e => { if (!confirm(f.dataset.confirm)) e.preventDefault(); }));
 document.querySelectorAll('input[type=file][data-preview]').forEach(i => i.addEventListener('change', () => {
-  const img = document.querySelector(i.dataset.preview); if (img && i.files[0]) img.src = URL.createObjectURL(i.files[0]);
+  const img = document.querySelector(i.dataset.preview); if (img && i.files[0]) { img.src = URL.createObjectURL(i.files[0]); img.hidden = false; const empty = img.nextElementSibling; if (empty && empty.tagName === "SPAN") empty.remove(); }
 }));
 </script>
 </body>

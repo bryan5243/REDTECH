@@ -1,6 +1,6 @@
 @font-face { font-family: "Sora"; src: url("fonts/sora-latin.woff2") format("woff2"); font-weight: 400 800; font-display: swap; }
 @font-face { font-family: "Inter"; src: url("fonts/inter-latin.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
-:root { --ink: #0b1a30; --text: #33445c; --muted: #64748b; --line: #e3e9f2; --bg: #f3f6fb; --blue: #1764ff; --grad: linear-gradient(120deg, #1764ff, #19c6e8); --red: #e5484d; --green: #12b76a; --amber: #f59e0b; }
+:root { --ink: #0b1a30; --text: #33445c; --muted: #64748b; --line: #e3e9f2; --bg: #f3f6fb; --blue: #1764ff; --cyan: #19c6e8; --grad: linear-gradient(120deg, var(--blue), var(--cyan)); --red: #e5484d; --green: #12b76a; --amber: #f59e0b; }
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0; font: 400 .95rem/1.55 "Inter", system-ui, sans-serif; color: var(--text); background: var(--bg); }
 h1, h2 { font-family: "Sora", system-ui, sans-serif; color: var(--ink); letter-spacing: -.02em; margin: 0 0 .8rem; line-height: 1.2; }
@@ -16,6 +16,7 @@ code { background: #e9eef7; padding: .1em .35em; border-radius: 5px; font-size: 
 .logo-mark i:nth-child(2) { height: 70%; } .logo-mark i:nth-child(3) { height: 100%; }
 .a-logo { display: inline-flex; align-items: center; gap: .5rem; font: 700 1.2rem "Sora", sans-serif; color: var(--ink); }
 .a-logo b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.a-logo .logo-img { height: 34px; width: auto; max-width: 160px; object-fit: contain; } .a-logo .logo-img-dark { display: none; }
 .a-logo small { font: 600 .7rem "Inter", sans-serif; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-left: .2rem; }
 
 .a-top { position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.5rem; padding: .7rem 1.2rem; background: #fff; border-bottom: 1px solid var(--line); }
@@ -120,3 +121,11 @@ input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--blue); }
 .a-login .panel { width: min(420px, calc(100vw - 2rem)); padding: 2rem; box-shadow: 0 30px 60px -30px rgb(11 26 48 / .35); }
 .a-login .a-btn { width: 100%; padding: .85rem; margin-top: .4rem; }
 .is-guest .a-main { margin: 0 auto; }
+
+.a-logo-preview { display: grid; place-items: center; width: 180px; height: 100px; flex: none; border: 1px dashed var(--line); border-radius: 10px; background: #fff; padding: 10px; color: var(--muted); font-size: .8rem; }
+.a-logo-preview.is-dark { background: #0b1a30; border-color: #0b1a30; }
+.a-image .a-logo-preview img { width: auto; max-width: 100%; height: auto; max-height: 100%; aspect-ratio: auto; object-fit: contain; border: 0; border-radius: 0; background: none; }
+.a-colors { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0 .4rem; }
+.a-colors label { display: grid; gap: .3rem; }
+.a-colors .hint { margin: 0; font-weight: 400; }
+.a-colors input[type="color"] { width: 100%; height: 46px; padding: 4px; cursor: pointer; }

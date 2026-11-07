@@ -44,7 +44,7 @@ Desde el panel puedes:
 | Categorías | Crear y ordenar categorías de la tienda. |
 | Pedidos | Ver los pedidos enviados por WhatsApp y marcarlos como atendidos. |
 | Cotizaciones | Ver las solicitudes del formulario y responder por WhatsApp. |
-| Datos del sitio | Número de WhatsApp, teléfonos, correos, ubicación, horario, redes sociales, cifras, fotos del sitio y tu contraseña. |
+| Datos del sitio | Logo (normal y para fondo oscuro), colores de la marca, número de WhatsApp, teléfonos, correos, ubicación, horario, redes sociales, cifras, fotos del sitio y tu contraseña. |
 
 Lo que no marques como **confirmado** aparece con la etiqueta «por confirmar» y sin enlaces. El botón flotante y el carrito de WhatsApp funcionan cuando hay un número de WhatsApp o un teléfono confirmado.
 

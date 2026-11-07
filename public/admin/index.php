@@ -30,7 +30,7 @@ if (!is_installed($pdo)) {
     admin_header('Instalar');
     ?>
     <div class="a-login">
-      <a class="a-logo" href="../"><span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Red<b>Tech</b></span></a>
+      <a class="a-logo" href="../"><?= site_logo()[1] ?></a>
       <form class="panel" method="post">
         <h1>Instalar la base de datos</h1>
         <?php if ($setupKey === ''): ?>
@@ -102,7 +102,7 @@ if (admin_user() === null) {
     admin_header($hasAdmins ? 'Ingresar' : 'Crear administrador');
     ?>
     <div class="a-login">
-      <a class="a-logo" href="../"><span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Red<b>Tech</b></span></a>
+      <a class="a-logo" href="../"><?= site_logo()[1] ?></a>
       <form class="panel" method="post">
         <h1><?= $hasAdmins ? 'Ingresar al panel' : 'Crear el primer administrador' ?></h1>
         <?php if (isset($_GET['caducada'])): ?><p class="a-flash a-flash-warn">Tu sesión caducó. Vuelve a ingresar.</p><?php endif; ?>

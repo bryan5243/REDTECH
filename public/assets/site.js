@@ -140,6 +140,15 @@
     const ctx = canvas.getContext('2d');
     let w, h, dpr, points = [], raf, visible = true;
     const mouse = { x: -999, y: -999 };
+    // Colores de marca (editables en el panel): líneas aclaradas del principal, puntero con el acento.
+    const rgb = (name, fallback) => {
+      const m = getComputedStyle(document.documentElement).getPropertyValue(name).trim().match(/^#([0-9a-f]{6})$/i);
+      const n = m ? parseInt(m[1], 16) : fallback;
+      return [n >> 16 & 255, n >> 8 & 255, n & 255];
+    };
+    const lift = (c, k) => c.map((v) => Math.round(v + (255 - v) * k)).join(',');
+    const base = rgb('--blue', 0x1764ff), accent = rgb('--cyan', 0x19c6e8).join(',');
+    const line = lift(base, .3), dot = lift(base, .55);
     const resize = () => {
       dpr = Math.min(devicePixelRatio || 1, 2);
       w = canvas.clientWidth; h = canvas.clientHeight;
@@ -163,17 +172,17 @@
           const q = points[j];
           const d = Math.hypot(p.x - q.x, p.y - q.y);
           if (d < max) {
-            ctx.strokeStyle = `rgba(90,170,255,${(1 - d / max) * .35})`;
+            ctx.strokeStyle = `rgba(${line},${(1 - d / max) * .35})`;
             ctx.lineWidth = 1;
             ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
           }
         }
         const dm = Math.hypot(p.x - mouse.x, p.y - mouse.y);
         if (dm < 180) {
-          ctx.strokeStyle = `rgba(25,198,232,${(1 - dm / 180) * .6})`;
+          ctx.strokeStyle = `rgba(${accent},${(1 - dm / 180) * .6})`;
           ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
         }
-        ctx.fillStyle = 'rgba(150,215,255,.85)';
+        ctx.fillStyle = `rgba(${dot},.85)`;
         ctx.beginPath(); ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2); ctx.fill();
       }
       if (visible) raf = requestAnimationFrame(step);

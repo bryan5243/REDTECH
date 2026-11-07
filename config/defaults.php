@@ -20,6 +20,12 @@ return [
         'schedule' => ['value' => 'Lunes a viernes, 08:00 a 18:00', 'confirmed' => 0],
         // 1 muestra en la tienda el aviso de que el catálogo es de ejemplo.
         'catalog_sample' => ['value' => '1', 'confirmed' => 1],
+        // Logo e identidad. Vacíos: logo de texto "RedTech" y colores originales.
+        'logo' => ['value' => '', 'confirmed' => 1],
+        'logo_dark' => ['value' => '', 'confirmed' => 1],
+        'color_primary' => ['value' => '', 'confirmed' => 1],
+        'color_accent' => ['value' => '', 'confirmed' => 1],
+        'color_dark' => ['value' => '', 'confirmed' => 1],
     ],
     'contacts' => [
         ['type' => 'phone', 'label' => 'Teléfono', 'value' => '+593 99 000 0000', 'confirmed' => 0],

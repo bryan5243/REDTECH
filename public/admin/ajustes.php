@@ -86,6 +86,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } catch (RuntimeException $exception) {
             flash($exception->getMessage(), 'error');
         }
+    } elseif ($section === 'brand') {
+        $save = $pdo->prepare('INSERT INTO settings (setting_key, setting_value, confirmed) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)');
+        try {
+            foreach (['logo', 'logo_dark'] as $key) {
+                if (isset($_POST['remove_' . $key])) {
+                    $save->execute([$key, '']);
+                } elseif (($path = save_upload('file_' . $key)) !== null) {
+                    $save->execute([$key, $path]);
+                }
+            }
+            foreach (BRAND_DEFAULTS as $key => $default) {
+                $value = isset($_POST['reset_colors']) ? '' : (valid_hex((string) ($_POST[$key] ?? '')) ?? '');
+                $save->execute([$key, $value === $default ? '' : $value]);
+            }
+            flash('Logo y colores guardados.');
+        } catch (RuntimeException $exception) {
+            flash($exception->getMessage(), 'error');
+        }
     } elseif ($section === 'password') {
         $statement = $pdo->prepare('SELECT password_hash FROM admins WHERE id = ?');
         $statement->execute([admin_user()['id']]);
@@ -126,6 +144,36 @@ admin_header('Datos del sitio', 'ajustes');
   </div>
   <label class="a-check"><input type="checkbox" name="catalog_sample" <?= setting('catalog_sample') === '1' ? 'checked' : '' ?>> Mostrar en la tienda el aviso «Catálogo de demostración»</label>
   <button class="a-btn a-btn-primary" type="submit">Guardar datos</button>
+</form>
+
+<?php $brand = brand_colors(); ?>
+<form id="brand" class="panel" method="post" enctype="multipart/form-data">
+  <h2>Logo y colores</h2>
+  <p class="hint">Sube el logo en PNG o WEBP con fondo transparente (ideal: horizontal, unos 400 × 120 px). Si no subes ninguno, se usa el logo de texto «RedTech».</p>
+  <?= csrf_field() ?><input type="hidden" name="section" value="brand">
+  <div class="a-images">
+    <?php foreach (['logo' => 'Logo (para fondo blanco)', 'logo_dark' => 'Logo para fondo oscuro (opcional, versión blanca)'] as $key => $label): $current = setting($key); ?>
+      <fieldset class="a-image">
+        <legend><?= e($label) ?></legend>
+        <div class="a-logo-preview<?= $key === 'logo_dark' ? ' is-dark' : '' ?>">
+          <img id="prev-<?= $key ?>" src="<?= $current !== '' ? e(url($current)) : '' ?>" alt=""<?= $current === '' ? ' hidden' : '' ?>>
+          <?php if ($current === ''): ?><span>Sin logo</span><?php endif; ?>
+        </div>
+        <div>
+          <label>Subir <input type="file" name="file_<?= $key ?>" accept="image/png,image/webp,image/jpeg" data-preview="#prev-<?= $key ?>"></label>
+          <?php if ($current !== ''): ?><label class="a-check"><input type="checkbox" name="remove_<?= $key ?>"> Quitar este logo</label><?php endif; ?>
+        </div>
+      </fieldset>
+    <?php endforeach; ?>
+  </div>
+  <p class="hint">Sin logo para fondo oscuro, en las zonas oscuras el logo se muestra sobre una placa blanca.</p>
+  <div class="a-colors">
+    <label>Color principal <span class="hint">botones, enlaces y degradado</span><input type="color" name="color_primary" value="<?= e($brand['color_primary']) ?>"></label>
+    <label>Color de acento <span class="hint">segundo color del degradado y detalles</span><input type="color" name="color_accent" value="<?= e($brand['color_accent']) ?>"></label>
+    <label>Color oscuro <span class="hint">fondos de portada, secciones oscuras y pie</span><input type="color" name="color_dark" value="<?= e($brand['color_dark']) ?>"></label>
+  </div>
+  <label class="a-check"><input type="checkbox" name="reset_colors"> Volver a los colores originales</label>
+  <button class="a-btn a-btn-primary" type="submit">Guardar logo y colores</button>
 </form>
 
 <form id="contacts" class="panel" method="post">
