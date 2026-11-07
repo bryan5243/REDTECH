@@ -28,6 +28,8 @@ php database/install.php
 
 El instalador crea las tablas y carga el catálogo de ejemplo. Se puede repetir sin borrar tus datos.
 
+**Sin terminal** (por ejemplo, en un hosting gratuito): abre `/admin/`. Si la conexión funciona pero faltan las tablas, el panel te pide la clave `admin_setup_key` y las crea.
+
 ## Panel de administración
 
 1. Entra a `/admin/`.
@@ -54,6 +56,14 @@ Lo que no marques como **confirmado** aparece con la etiqueta «por confirmar» 
 2. Copia `config/`, `src/` y `database/` junto a `public_html/`, fuera de esa carpeta.
 3. Crea `config/config.php` en el servidor y ejecuta el instalador.
 4. Comprueba que `public_html/uploads/` tenga permisos de escritura para subir fotos.
+
+## Publicar en un hosting gratuito (InfinityFree u otro con PHP y MySQL)
+
+1. Crea la cuenta y el sitio. Te dan un subdominio gratis, por ejemplo `redtech.infinityfreeapp.com`.
+2. En el panel, abre **MySQL Databases** y crea una base. Anota el host (por ejemplo `sql123.infinityfree.com`), el nombre, el usuario y la contraseña.
+3. Sube **todo el proyecto** dentro de `htdocs/` con el administrador de archivos o por FTP (FileZilla). El `.htaccess` de la raíz sirve `public/` como página principal y bloquea `config/`, `src/` y `database/`.
+4. En `htdocs/config/`, copia `config.example.php` como `config.php` y escribe los datos de MySQL y una `admin_setup_key`.
+5. Abre `https://tu-subdominio/admin/`, escribe la clave para instalar la base de datos y luego crea tu usuario.
 
 ## Seguridad
 

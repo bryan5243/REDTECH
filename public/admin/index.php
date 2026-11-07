@@ -13,6 +13,42 @@ if ($pdo === null) {
     require_admin(); // muestra el aviso de base de datos
 }
 
+// Hostings sin terminal: la primera visita crea las tablas con la clave de instalación.
+require __DIR__ . '/../../src/install.php';
+if (!is_installed($pdo)) {
+    $setupKey = (string) (config()['admin_setup_key'] ?? '');
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        check_post();
+        if ($setupKey !== '' && hash_equals($setupKey, (string) ($_POST['setup_key'] ?? ''))) {
+            run_install($pdo);
+            flash('Base de datos instalada. Ahora crea tu usuario administrador.');
+            redirect('index.php');
+        }
+        sleep(2);
+        $error = 'La clave de instalación no es correcta.';
+    }
+    admin_header('Instalar');
+    ?>
+    <div class="a-login">
+      <a class="a-logo" href="../"><span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Red<b>Tech</b></span></a>
+      <form class="panel" method="post">
+        <h1>Instalar la base de datos</h1>
+        <?php if ($setupKey === ''): ?>
+          <p class="hint">Primero escribe una clave en <code>admin_setup_key</code> dentro de <code>config/config.php</code>.</p>
+        <?php else: ?>
+          <p class="hint">La conexión a MySQL funciona, pero faltan las tablas. Escribe la clave <code>admin_setup_key</code> de <code>config/config.php</code> para crearlas.</p>
+          <?php if ($error): ?><p class="a-flash a-flash-error" role="alert"><?= e($error) ?></p><?php endif; ?>
+          <?= csrf_field() ?>
+          <label>Clave de instalación <input name="setup_key" type="password" required autocomplete="off"></label>
+          <button class="a-btn a-btn-primary" type="submit">Instalar</button>
+        <?php endif; ?>
+      </form>
+    </div>
+    <?php
+    admin_footer();
+    exit;
+}
+
 $hasAdmins = (int) $pdo->query('SELECT COUNT(*) FROM admins')->fetchColumn() > 0;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_user() === null) {
