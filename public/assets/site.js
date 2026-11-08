@@ -305,7 +305,7 @@
     empty.hidden = cart.length > 0;
     checkout.hidden = cart.length === 0;
     list.innerHTML = cart.map((item, idx) => `
-      <li class="cart-item">
+      <li class="cart-item" style="--n:${idx}">
         <img src="${esc(item.image)}" alt="" width="68" height="68" loading="lazy">
         <div>
           <h3>${esc(item.name)}</h3>
@@ -328,13 +328,41 @@
 
   const update = (next) => { cart = next; save(cart); render(); };
 
+  // La foto del producto vuela en arco hasta el ícono del carrito.
+  const flyToCart = (trigger, product) => new Promise((resolve) => {
+    const target = $('.cart-btn');
+    const source = trigger.closest('.pcard')?.querySelector('img') || (trigger.hasAttribute('data-add-qty') ? $('[data-gallery-main]') : null);
+    if (reduced || !target || !source || !source.animate) { resolve(); return; }
+    const from = source.getBoundingClientRect();
+    const to = target.getBoundingClientRect();
+    if (!from.width || !to.width) { resolve(); return; }
+    const size = Math.min(140, from.width, from.height);
+    const clone = document.createElement('img');
+    clone.src = source.currentSrc || source.src || product.image;
+    clone.alt = '';
+    clone.className = 'fly-to-cart';
+    Object.assign(clone.style, { width: `${size}px`, height: `${size}px`, left: `${from.left + (from.width - size) / 2}px`, top: `${from.top + (from.height - size) / 2}px` });
+    document.body.appendChild(clone);
+    const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+    const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+    const lift = Math.min(160, Math.abs(dy) * .35 + 60);
+    const anim = clone.animate([
+      { transform: 'translate(0, 0) scale(1) rotate(0)', opacity: 1, borderRadius: '14px' },
+      { transform: `translate(${dx * .45}px, ${dy * .45 - lift}px) scale(.6) rotate(-8deg)`, opacity: 1, offset: .45 },
+      { transform: `translate(${dx}px, ${dy}px) scale(.12) rotate(10deg)`, opacity: .6, borderRadius: '50%' },
+    ], { duration: 820, easing: 'cubic-bezier(.45, 0, .25, 1)', fill: 'forwards' });
+    anim.onfinish = () => { clone.remove(); resolve(); };
+    anim.oncancel = anim.onfinish;
+  });
+
   let lastFocus = null;
   const openDrawer = () => {
     if (!drawer) return;
     lastFocus = document.activeElement;
     drawer.hidden = false;
     body.classList.add('drawer-open');
-    requestAnimationFrame(() => { drawer.classList.add('is-open'); $('.drawer-panel', drawer).focus(); });
+    requestAnimationFrame(() => { drawer.classList.add('is-open', 'is-entering'); $('.drawer-panel', drawer).focus(); });
+    setTimeout(() => drawer.classList.remove('is-entering'), 1200);
   };
   const closeDrawer = () => {
     if (!drawer || drawer.hidden) return;
@@ -361,7 +389,11 @@
       update(next);
       add.classList.add('is-added');
       setTimeout(() => add.classList.remove('is-added'), 1200);
-      if (countEl) { countEl.classList.remove('bump'); void countEl.offsetWidth; countEl.classList.add('bump'); }
+      flyToCart(add, product).then(() => {
+        const btn = $('.cart-btn');
+        if (btn) { btn.classList.remove('is-hit'); void btn.offsetWidth; btn.classList.add('is-hit'); }
+        if (countEl) { countEl.classList.remove('bump'); void countEl.offsetWidth; countEl.classList.add('bump'); }
+      });
       toast(`Agregado: ${product.name}`);
       return;
     }
@@ -384,7 +416,7 @@
     update(next);
   });
 
-  checkout?.addEventListener('submit', (e) => {
+  checkout?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!waNumber || cart.length === 0) return;
     const data = new FormData(checkout);
@@ -393,37 +425,54 @@
     const city = String(data.get('ciudad') || '').trim();
     const notes = String(data.get('notas') || '').trim();
     const total = cart.reduce((a, i) => a + (i.price || 0) * i.qty, 0);
-    const lines = cart.map((i, n) => `${n + 1}. ${i.name} x${i.qty} - ${i.price === null ? 'precio a consultar' : money(i.price * i.qty)}`);
-    const text = [
-      'Hola RedTech, quiero hacer este pedido:',
+    const units = cart.reduce((a, i) => a + i.qty, 0);
+    const lines = cart.map((i) => `• ${i.qty} × ${i.name}${i.price === null ? ' (precio a consultar)' : ` — ${money(i.price)} c/u = ${money(i.price * i.qty)}`}`);
+    const message = (order) => [
+      order ? `🛒 *Pedido #${order.number}* · ${units} ${units === 1 ? 'producto' : 'productos'}` : `🛒 *Nuevo pedido* · ${units} ${units === 1 ? 'producto' : 'productos'}`,
       '',
       ...lines,
       '',
       `*Total estimado: ${money(total)}*`,
-      cart.some((i) => i.price === null) ? '(Incluye productos con precio a consultar)' : '',
+      cart.some((i) => i.price === null) ? '_Incluye productos con precio a consultar._' : '',
       '',
-      `Nombre: ${name}`,
-      city ? `Ciudad: ${city}` : '',
-      notes ? `Notas: ${notes}` : '',
+      `👤 ${name}${city ? ` · ${city}` : ''}`,
+      notes ? `📝 ${notes}` : '',
+      order ? `\n🔗 Ver el pedido con fotos:\n${order.url}` : '',
     ].join('\n').replace(/\n{3,}/g, '\n\n').trim();
 
+    // Abrimos la pestaña ya (los navegadores bloquean ventanas abiertas después de esperar)
+    // y le ponemos la dirección de WhatsApp cuando el pedido queda guardado.
+    const win = window.open('', '_blank');
+    const submit = $('button[type=submit]', checkout);
+    submit?.classList.add('cart-sending');
     const endpoint = body.dataset.orderEndpoint;
     const csrf = $('meta[name=csrf]')?.content;
+    let order = null;
     if (endpoint) {
       try {
-        fetch(endpoint, {
-          method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 6000);
+        const res = await fetch(endpoint, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctrl.signal,
           body: JSON.stringify({ csrf, nombre: name, ciudad: city, notas: notes, items: cart.map((i) => ({ id: i.id, qty: i.qty })) }),
-        }).catch(() => {});
-      } catch { /* el pedido sigue por WhatsApp */ }
+        });
+        clearTimeout(timer);
+        const json = await res.json();
+        if (json.ok && json.code) {
+          order = { number: json.number, url: new URL(`${body.dataset.orderView}?c=${json.code}`, location.href).href };
+        }
+      } catch { /* sin conexión al servidor: el pedido sigue por WhatsApp sin enlace */ }
     }
-    window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+    submit?.classList.remove('cart-sending');
+    const wa = `https://wa.me/${waNumber}?text=${encodeURIComponent(message(order))}`;
+    if (win && !win.closed) { win.opener = null; win.location.href = wa; } else { location.href = wa; }
     update([]);
     checkout.reset();
     closeDrawer();
-    toast('Abrimos WhatsApp con tu pedido');
+    toast(order ? `Pedido #${order.number} listo: te abrimos WhatsApp` : 'Abrimos WhatsApp con tu pedido');
   });
 
+  $$('[data-print]').forEach((b) => b.addEventListener('click', () => print()));
   addEventListener('storage', (e) => { if (e.key === KEY) { cart = load(); render(); } });
   render();
 })();

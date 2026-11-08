@@ -13,7 +13,8 @@ function nav_links(): array
     ];
 }
 
-function page_header(string $title, string $description, string $active = '', string $bodyClass = ''): void
+/** $meta admite 'image' (dirección completa para la vista previa) y 'noindex'. */
+function page_header(string $title, string $description, string $active = '', string $bodyClass = '', array $meta = []): void
 {
     $wa = whatsapp_number();
     [$logoClass, $logoHtml] = site_logo();
@@ -29,16 +30,18 @@ function page_header(string $title, string $description, string $active = '', st
   <meta property="og:title" content="<?= e($title) ?>">
   <meta property="og:description" content="<?= e($description) ?>">
   <meta property="og:type" content="website">
+  <?php if (!empty($meta['image'])): ?><meta property="og:image" content="<?= e($meta['image']) ?>"><?php endif; ?>
+  <?php if (!empty($meta['noindex'])): ?><meta name="robots" content="noindex, nofollow"><?php endif; ?>
   <meta name="csrf" content="<?= e(csrf_token()) ?>">
   <link rel="preconnect" href="https://images.unsplash.com">
   <link rel="preload" href="<?= url('assets/fonts/sora-latin.woff2') ?>" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="<?= url('assets/fonts/inter-latin.woff2') ?>" as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="<?= url('assets/img/favicon.svg') ?>" type="image/svg+xml">
-  <link rel="stylesheet" href="<?= url('assets/site.css') ?>?v=4">
+  <link rel="stylesheet" href="<?= url('assets/site.css') ?>?v=5">
   <?= brand_style() ?>
-  <script src="<?= url('assets/site.js') ?>?v=4" defer></script>
+  <script src="<?= url('assets/site.js') ?>?v=5" defer></script>
 </head>
-<body class="<?= e($bodyClass) ?>" data-whatsapp="<?= e($wa) ?>" data-order-endpoint="<?= url('pedido.php') ?>">
+<body class="<?= e($bodyClass) ?>" data-whatsapp="<?= e($wa) ?>" data-order-endpoint="<?= url('pedido.php') ?>" data-order-view="<?= url('orden.php') ?>">
 <a class="skip" href="#principal">Saltar al contenido</a>
 
 <div class="scroll-progress" aria-hidden="true"><span data-progress></span></div>

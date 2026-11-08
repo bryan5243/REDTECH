@@ -223,6 +223,7 @@ function icon(string $name, string $class = 'icon'): string
         'telefono' => '<path d="M14 5l6 9-4 4a24 24 0 0 0 14 14l4-4 9 6-3 7C22 41 7 26 7 8z"/>',
         'correo' => '<rect x="5" y="10" width="38" height="28" rx="3"/><path d="M6 12l18 14 18-14"/>',
         'ubicacion' => '<path d="M24 44S9 29 9 19a15 15 0 0 1 30 0c0 10-15 25-15 25z"/><circle cx="24" cy="19" r="5"/>',
+        'imprimir' => '<path d="M14 18V6h20v12"/><rect x="6" y="18" width="36" height="16" rx="3"/><path d="M14 28h20v14H14z"/>',
         'reloj' => '<circle cx="24" cy="24" r="18"/><path d="M24 13v12l8 5"/>',
         'camion' => '<path d="M3 12h26v20H3zM29 19h9l7 7v6H29z"/><circle cx="12" cy="36" r="4"/><circle cx="37" cy="36" r="4"/>',
         'chat' => '<path d="M8 40l3-9a17 17 0 1 1 7 6z"/>',
@@ -306,4 +307,18 @@ function site_logo(): array
         $html .= '<img class="logo-img logo-img-dark" src="' . e(url($dark)) . '" alt="RedTech">';
     }
     return [$dark !== '' ? ' logo--img logo--dual' : ' logo--img', $html];
+}
+
+/** Dirección completa (https://dominio/carpeta/...) de una ruta del sitio, para compartir. */
+function absolute_url(string $path): string
+{
+    if (preg_match('#^https?://#', $path)) {
+        return $path;
+    }
+    $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')) === 'https';
+    $host = (string) ($_SERVER['HTTP_HOST'] ?? 'localhost');
+    // La carpeta visible en el navegador (sirve también cuando .htaccess oculta public/).
+    $dir = rtrim(str_replace('\\', '/', dirname((string) parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH) . 'x')), '/');
+    return ($https ? 'https' : 'http') . '://' . $host . $dir . '/' . ltrim(preg_replace('#^\./#', '', $path), '/');
 }

@@ -45,6 +45,7 @@ function run_install(PDO $pdo): array
         $pdo->exec('ALTER TABLE quote_requests DROP COLUMN customer_type');
     }
     $pdo->exec('ALTER TABLE settings MODIFY setting_value VARCHAR(500) NOT NULL');
+    ensure_order_code($pdo);
 
     // Catálogo de ejemplo: solo si todavía no hay categorías.
     if ((int) $pdo->query('SELECT COUNT(*) FROM categories')->fetchColumn() === 0) {
@@ -77,4 +78,12 @@ function run_install(PDO $pdo): array
 function is_installed(PDO $pdo): bool
 {
     return (bool) $pdo->query("SHOW TABLES LIKE 'admins'")->fetch();
+}
+
+/** Migración: código público de cada pedido (para la página que se comparte por WhatsApp). */
+function ensure_order_code(PDO $pdo): void
+{
+    if (!$pdo->query("SHOW COLUMNS FROM orders LIKE 'code'")->fetch()) {
+        $pdo->exec('ALTER TABLE orders ADD COLUMN code VARCHAR(16) NULL UNIQUE AFTER id');
+    }
 }

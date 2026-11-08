@@ -42,6 +42,7 @@ admin_header('Pedidos', 'pedidos');
         <tr class="a-total"><td colspan="2">Total estimado</td><td><?= e(money((float) $order['total'])) ?></td></tr>
       </tbody></table>
       <?php if ($order['notes']): ?><p class="hint"><b>Notas:</b> <?= e($order['notes']) ?></p><?php endif; ?>
+      <?php if (($order['code'] ?? '') !== ''): ?><p><a href="../orden.php?c=<?= e($order['code']) ?>" target="_blank" rel="noopener">Ver la página del pedido que recibió el cliente</a></p><?php endif; ?>
     </article>
   <?php endforeach; ?>
 </div>

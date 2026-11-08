@@ -6,6 +6,7 @@ declare(strict_types=1);
 // para verlo después en /admin. Los precios se toman del catálogo, no del navegador.
 require __DIR__ . '/../src/bootstrap.php';
 require __DIR__ . '/../src/catalog.php';
+require __DIR__ . '/../src/install.php';
 
 start_session();
 header('Content-Type: application/json; charset=utf-8');
@@ -30,7 +31,7 @@ if ($name === '' || $items === [] || $pdo === null) {
 
 $lines = [];
 $total = 0.0;
-$statement = $pdo->prepare('SELECT id, name, price FROM products WHERE id = ? AND active = 1');
+$statement = $pdo->prepare('SELECT id, slug, name, price, image FROM products WHERE id = ? AND active = 1');
 foreach ($items as $item) {
     $qty = max(1, min(999, (int) ($item['qty'] ?? 1)));
     $statement->execute([(int) ($item['id'] ?? 0)]);
@@ -40,7 +41,7 @@ foreach ($items as $item) {
     }
     $price = $product['price'] === null ? null : (float) $product['price'];
     $total += ($price ?? 0) * $qty;
-    $lines[] = ['id' => (int) $product['id'], 'name' => $product['name'], 'qty' => $qty, 'price' => $price];
+    $lines[] = ['id' => (int) $product['id'], 'slug' => $product['slug'], 'name' => $product['name'], 'image' => $product['image'], 'qty' => $qty, 'price' => $price];
 }
 
 if ($lines === []) {
@@ -49,9 +50,12 @@ if ($lines === []) {
 }
 
 try {
-    $pdo->prepare('INSERT INTO orders (customer_name, city, notes, items, total) VALUES (?, ?, ?, ?, ?)')
-        ->execute([$name, $city ?: null, $notes ?: null, json_encode($lines, JSON_UNESCAPED_UNICODE), $total]);
-    echo json_encode(['ok' => true]);
+    ensure_order_code($pdo);
+    // Código aleatorio: la página del pedido no se puede adivinar recorriendo números.
+    $code = bin2hex(random_bytes(6));
+    $pdo->prepare('INSERT INTO orders (code, customer_name, city, notes, items, total) VALUES (?, ?, ?, ?, ?, ?)')
+        ->execute([$code, $name, $city ?: null, $notes ?: null, json_encode($lines, JSON_UNESCAPED_UNICODE), $total]);
+    echo json_encode(['ok' => true, 'code' => $code, 'number' => (int) $pdo->lastInsertId()]);
 } catch (PDOException $exception) {
     error_log('RedTech DB: ' . $exception->getMessage());
     echo json_encode(['ok' => false]);
