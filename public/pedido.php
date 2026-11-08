@@ -6,7 +6,7 @@ declare(strict_types=1);
 // para verlo después en /admin. Los precios se toman del catálogo, no del navegador.
 require __DIR__ . '/../src/bootstrap.php';
 require __DIR__ . '/../src/catalog.php';
-require __DIR__ . '/../src/install.php';
+require_once __DIR__ . '/../src/install.php';
 
 start_session();
 header('Content-Type: application/json; charset=utf-8');

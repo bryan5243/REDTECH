@@ -44,6 +44,11 @@ function normalize_product(array $row): array
 {
     $row['price'] = $row['price'] === null || $row['price'] === '' ? null : (float) $row['price'];
     $row['featured'] = (int) $row['featured'];
+    $row['stock_qty'] = isset($row['stock_qty']) && $row['stock_qty'] !== '' ? (int) $row['stock_qty'] : null;
+    $row['show_stock'] = (int) ($row['show_stock'] ?? 0);
+    if ($row['stock_qty'] === 0) {
+        $row['stock'] = 'agotado';
+    }
     $row['gallery'] = array_values(array_filter(array_map('trim', explode("\n", (string) ($row['gallery'] ?? '')))));
     return $row;
 }
@@ -214,5 +219,16 @@ function cart_payload(array $product): string
         'name' => $product['name'],
         'price' => $product['price'],
         'image' => image_src($product['image'], 200, 200),
+        'max' => $product['stock_qty'] ?? null,
     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP);
+}
+
+/** Texto «Quedan N unidades» si el producto muestra su stock en la web; vacío si no. */
+function stock_note(array $product): string
+{
+    $qty = $product['stock_qty'] ?? null;
+    if (empty($product['show_stock']) || $qty === null || $qty <= 0) {
+        return '';
+    }
+    return $qty === 1 ? 'Queda 1 unidad' : ($qty <= 5 ? "Últimas $qty unidades" : "$qty unidades disponibles");
 }

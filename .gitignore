@@ -14,3 +14,7 @@ public/uploads/*
 .DS_Store
 Thumbs.db
 *.log
+
+# Facturas subidas desde el panel
+storage/*
+!storage/.htaccess

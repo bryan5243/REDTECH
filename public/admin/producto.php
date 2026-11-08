@@ -10,7 +10,7 @@ $id = (int) ($_GET['id'] ?? $_POST['id'] ?? 0);
 $categories = $pdo->query('SELECT id, name FROM categories ORDER BY sort_order, name')->fetchAll();
 $errors = [];
 
-$product = ['id' => 0, 'category_id' => $categories[0]['id'] ?? 0, 'slug' => '', 'name' => '', 'brand' => '', 'summary' => '', 'description' => '', 'specs' => '', 'price' => null, 'stock' => 'disponible', 'image' => '', 'gallery' => '', 'featured' => 0, 'active' => 1, 'sort_order' => 0];
+$product = ['id' => 0, 'category_id' => $categories[0]['id'] ?? 0, 'slug' => '', 'name' => '', 'brand' => '', 'summary' => '', 'description' => '', 'specs' => '', 'price' => null, 'stock' => 'disponible', 'stock_qty' => null, 'show_stock' => 0, 'image' => '', 'gallery' => '', 'featured' => 0, 'active' => 1, 'sort_order' => 0];
 if ($id > 0) {
     $statement = $pdo->prepare('SELECT * FROM products WHERE id = ?');
     $statement->execute([$id]);
@@ -34,6 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'specs' => trim((string) ($_POST['specs'] ?? '')),
         'price' => trim(str_replace(',', '.', (string) ($_POST['price'] ?? ''))),
         'stock' => (string) ($_POST['stock'] ?? 'disponible'),
+        'stock_qty' => trim((string) ($_POST['stock_qty'] ?? '')),
+        'show_stock' => isset($_POST['show_stock']) ? 1 : 0,
         'image' => trim((string) ($_POST['image'] ?? '')),
         'gallery' => trim((string) ($_POST['gallery'] ?? '')),
         'featured' => isset($_POST['featured']) ? 1 : 0,
@@ -52,6 +54,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['price'] = 'Escribe el precio con números, por ejemplo 145.50. Déjalo vacío para "precio a consultar".';
     }
     if (!in_array($input['stock'], ['disponible', 'bajo_pedido', 'agotado'], true)) {
+        $input['stock'] = 'disponible';
+    }
+    if ($input['stock_qty'] !== '' && (!ctype_digit($input['stock_qty']) || (int) $input['stock_qty'] > 1000000)) {
+        $errors['stock_qty'] = 'Escribe las unidades con números enteros, por ejemplo 12. Déjalo vacío si no llevas control de stock.';
+    }
+    $qty = $input['stock_qty'] === '' ? null : (int) $input['stock_qty'];
+    // Con 0 unidades el producto queda agotado; al reponer, vuelve a estar disponible.
+    if ($qty === 0) {
+        $input['stock'] = 'agotado';
+    } elseif ($qty !== null && $input['stock'] === 'agotado') {
         $input['stock'] = 'disponible';
     }
     $exists = $pdo->prepare('SELECT id FROM products WHERE slug = ? AND id <> ?');
@@ -79,12 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($errors === []) {
         $values = [$input['category_id'], $input['slug'], $input['name'], $input['brand'], $input['summary'], $input['description'], $input['specs'],
-            $input['price'] === '' ? null : round((float) $input['price'], 2), $input['stock'], $input['image'], $input['gallery'], $input['featured'], $input['active'], $input['sort_order']];
+            $input['price'] === '' ? null : round((float) $input['price'], 2), $input['stock'], $qty, $input['show_stock'], $input['image'], $input['gallery'], $input['featured'], $input['active'], $input['sort_order']];
         if ($id > 0) {
             $values[] = $id;
-            $pdo->prepare('UPDATE products SET category_id=?, slug=?, name=?, brand=?, summary=?, description=?, specs=?, price=?, stock=?, image=?, gallery=?, featured=?, active=?, sort_order=? WHERE id=?')->execute($values);
+            $pdo->prepare('UPDATE products SET category_id=?, slug=?, name=?, brand=?, summary=?, description=?, specs=?, price=?, stock=?, stock_qty=?, show_stock=?, image=?, gallery=?, featured=?, active=?, sort_order=? WHERE id=?')->execute($values);
         } else {
-            $pdo->prepare('INSERT INTO products (category_id, slug, name, brand, summary, description, specs, price, stock, image, gallery, featured, active, sort_order) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)')->execute($values);
+            $pdo->prepare('INSERT INTO products (category_id, slug, name, brand, summary, description, specs, price, stock, stock_qty, show_stock, image, gallery, featured, active, sort_order) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')->execute($values);
             $id = (int) $pdo->lastInsertId();
         }
         flash('Producto guardado.');
@@ -142,6 +154,8 @@ admin_header($id > 0 ? 'Editar producto' : 'Nuevo producto', 'productos');
       <label>Disponibilidad
         <select name="stock"><?php foreach (['disponible', 'bajo_pedido', 'agotado'] as $s): ?><option value="<?= $s ?>"<?= $product['stock'] === $s ? ' selected' : '' ?>><?= e(stock_label($s)) ?></option><?php endforeach; ?></select>
       </label>
+      <label>Unidades en stock <input name="stock_qty" type="number" min="0" step="1" inputmode="numeric" value="<?= e($product['stock_qty'] === null ? '' : (string) $product['stock_qty']) ?>" placeholder="Vacío = sin control"><small>Se descuentan al registrar una venta. Con 0 el producto pasa a «Agotado».</small></label><?= $err('stock_qty') ?>
+      <label class="a-check"><input type="checkbox" name="show_stock" <?= (int) $product['show_stock'] === 1 ? 'checked' : '' ?>> Mostrar las unidades disponibles en la web</label>
       <label class="a-check"><input type="checkbox" name="featured" <?= (int) $product['featured'] === 1 ? 'checked' : '' ?>> Destacado en el inicio</label>
       <label class="a-check"><input type="checkbox" name="active" <?= (int) $product['active'] === 1 ? 'checked' : '' ?>> Visible en la tienda</label>
     </section>

@@ -88,18 +88,21 @@ input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--blue); }
 .a-table .a-total td { font-weight: 700; color: var(--ink); border-bottom: 0; }
 .a-prod { display: flex; align-items: center; gap: .8rem; }
 .a-prod img { width: 48px; height: 48px; object-fit: cover; border-radius: 10px; background: var(--bg); }
-.a-actions { display: flex; flex-wrap: wrap; gap: .35rem; justify-content: flex-end; }
-.a-actions form { margin: 0; }
+.a-actions { text-align: right; min-width: 210px; }
+.a-actions > * { display: inline-block; vertical-align: middle; margin: .15rem 0 .15rem .2rem; }
+.a-actions form { margin: .15rem 0 .15rem .2rem; }
 .tag { display: inline-block; white-space: nowrap; padding: .2rem .55rem; border-radius: 999px; font-size: .74rem; font-weight: 600; background: var(--bg); color: var(--muted); }
 .tag-disponible, .tag-atendido { background: #e6f8ef; color: #0b7a47; }
 .tag-bajo_pedido, .tag-nuevo, .tag-star { background: #fff4d6; color: #8a5a00; }
 .tag-agotado, .tag-cancelado { background: #fdecec; color: #b42318; }
+.tag-new { background: color-mix(in srgb, var(--blue) 12%, #fff); color: var(--blue); }
 @media (max-width: 760px) {
   .a-table-products thead, .a-table-edit thead { display: none; }
   .a-table-products tr, .a-table-edit tr { display: grid; gap: .3rem; padding: .9rem 1rem; border-bottom: 1px solid var(--line); }
   .a-table-products td, .a-table-edit td { border: 0; padding: .1rem 0; }
   .a-table-products td[data-label]::before, .a-table-edit td[data-label]::before { content: attr(data-label) ": "; color: var(--muted); font-size: .8rem; }
-  .a-actions { justify-content: flex-start; margin-top: .4rem; }
+  .a-actions { text-align: left; min-width: 0; margin-top: .4rem; }
+  .a-actions > *, .a-actions form { margin: .15rem .2rem .15rem 0; }
 }
 
 .a-form { display: grid; gap: 1.2rem; }
@@ -129,3 +132,27 @@ input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--blue); }
 .a-colors label { display: grid; gap: .3rem; }
 .a-colors .hint { margin: 0; font-weight: 400; }
 .a-colors input[type="color"] { width: 100%; height: 46px; padding: 4px; cursor: pointer; }
+
+/* Pedidos: pestañas y cierre de venta */
+.a-tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1rem; padding: .35rem; background: #fff; border: 1px solid var(--line); border-radius: 14px; width: fit-content; max-width: 100%; }
+.a-tabs a { display: inline-flex; align-items: center; gap: .45rem; padding: .55rem .9rem; border-radius: 10px; color: var(--text); font-weight: 600; font-size: .9rem; }
+.a-tabs a span { min-width: 1.5rem; padding: .1rem .4rem; border-radius: 999px; background: var(--bg); font-size: .75rem; text-align: center; color: var(--muted); }
+.a-tabs a:hover { background: var(--bg); }
+.a-tabs a[aria-current] { background: var(--ink); color: #fff; }
+.a-tabs a[aria-current] span { background: rgb(255 255 255 / .18); color: #fff; }
+.a-order h2 .tag { vertical-align: middle; margin-left: .3rem; }
+.a-order-actions { margin-top: 1rem; }
+.a-order-actions input[type="file"], .a-order-actions input[name="motivo"] { width: auto; max-width: 260px; }
+.a-close { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 1rem; margin-top: 1rem; }
+.a-close form { display: grid; gap: .6rem; align-content: start; padding: 1rem; border-radius: 12px; }
+.a-close h3 { margin: 0; font: 600 .95rem "Sora", sans-serif; color: var(--ink); }
+.a-close button { justify-self: start; }
+.a-close-sale { background: #effaf4; border: 1px solid #c9eed9; }
+.a-close-lost { background: var(--bg); border: 1px solid var(--line); }
+@media (max-width: 760px) { .a-close { grid-template-columns: 1fr; } }
+
+/* Productos: stock */
+.a-stock { display: grid; gap: .35rem; justify-items: start; }
+.a-stock small { color: var(--muted); }
+.a-sell { display: flex; gap: .3rem; align-items: center; }
+.a-sell input { width: 64px; padding: .35rem .45rem; }

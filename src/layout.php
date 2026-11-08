@@ -37,9 +37,9 @@ function page_header(string $title, string $description, string $active = '', st
   <link rel="preload" href="<?= url('assets/fonts/sora-latin.woff2') ?>" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="<?= url('assets/fonts/inter-latin.woff2') ?>" as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="<?= url('assets/img/favicon.svg') ?>" type="image/svg+xml">
-  <link rel="stylesheet" href="<?= url('assets/site.css') ?>?v=5">
+  <link rel="stylesheet" href="<?= url('assets/site.css') ?>?v=6">
   <?= brand_style() ?>
-  <script src="<?= url('assets/site.js') ?>?v=5" defer></script>
+  <script src="<?= url('assets/site.js') ?>?v=6" defer></script>
 </head>
 <body class="<?= e($bodyClass) ?>" data-whatsapp="<?= e($wa) ?>" data-order-endpoint="<?= url('pedido.php') ?>" data-order-view="<?= url('orden.php') ?>">
 <a class="skip" href="#principal">Saltar al contenido</a>
@@ -173,6 +173,7 @@ function product_card(array $product, int $index = 0): string
         <p class="pcard-cat"><?= e($product['category_name']) ?></p>
         <h3><a href="<?= url('producto.php?p=' . rawurlencode($product['slug'])) ?>"><?= e($product['name']) ?></a></h3>
         <p class="pcard-summary"><?= e($product['summary']) ?></p>
+        <?php if (($note = stock_note($product)) !== ''): ?><p class="stock-note<?= $product['stock_qty'] <= 5 ? ' is-low' : '' ?>"><?= e($note) ?></p><?php endif; ?>
         <div class="pcard-foot">
           <span class="price<?= $product['price'] === null ? ' price-ask' : '' ?>"><?= e(money($product['price'])) ?></span>
           <?php if ($product['stock'] !== 'agotado'): ?>

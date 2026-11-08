@@ -14,7 +14,7 @@ if ($pdo === null) {
 }
 
 // Hostings sin terminal: la primera visita crea las tablas con la clave de instalación.
-require __DIR__ . '/../../src/install.php';
+require_once __DIR__ . '/../../src/install.php';
 if (!is_installed($pdo)) {
     $setupKey = (string) (config()['admin_setup_key'] ?? '');
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -167,7 +167,7 @@ admin_header('Resumen', 'inicio');
     <?php if (!$orders): ?><p class="hint">Aún no hay pedidos.</p><?php else: ?>
       <table class="a-table"><tbody>
         <?php foreach ($orders as $order): ?>
-          <tr><td><b><?= e($order['customer_name']) ?></b><br><small><?= e($order['created_at']) ?></small></td><td><?= e(money((float) $order['total'])) ?></td><td><span class="tag tag-<?= e($order['status']) ?>"><?= e($order['status']) ?></span></td></tr>
+          <tr><td><b><?= e($order['customer_name']) ?></b><br><small><?= e($order['created_at']) ?></small></td><td><?= e(money((float) $order['total'])) ?></td><td><?php [$sl, $sc] = order_statuses()[$order['status']] ?? [$order['status'], '']; ?><span class="tag <?= $sc ?>"><?= e($sl) ?></span></td></tr>
         <?php endforeach; ?>
       </tbody></table>
     <?php endif; ?>

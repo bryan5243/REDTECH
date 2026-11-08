@@ -45,7 +45,7 @@ function run_install(PDO $pdo): array
         $pdo->exec('ALTER TABLE quote_requests DROP COLUMN customer_type');
     }
     $pdo->exec('ALTER TABLE settings MODIFY setting_value VARCHAR(500) NOT NULL');
-    ensure_order_code($pdo);
+    migrate_schema($pdo);
 
     // Catálogo de ejemplo: solo si todavía no hay categorías.
     if ((int) $pdo->query('SELECT COUNT(*) FROM categories')->fetchColumn() === 0) {
@@ -80,10 +80,33 @@ function is_installed(PDO $pdo): bool
     return (bool) $pdo->query("SHOW TABLES LIKE 'admins'")->fetch();
 }
 
+/** Versión del esquema; súbela al agregar migraciones en migrate_schema(). */
+const SCHEMA_VERSION = 2;
+
 /** Migración: código público de cada pedido (para la página que se comparte por WhatsApp). */
 function ensure_order_code(PDO $pdo): void
 {
     if (!$pdo->query("SHOW COLUMNS FROM orders LIKE 'code'")->fetch()) {
         $pdo->exec('ALTER TABLE orders ADD COLUMN code VARCHAR(16) NULL UNIQUE AFTER id');
+    }
+}
+
+/**
+ * Pone al día una base ya instalada (por ejemplo, en el hosting) sin tener que
+ * volver a ejecutar el instalador. Se puede repetir.
+ */
+function migrate_schema(PDO $pdo): void
+{
+    $has = static fn (string $table, string $column): bool => (bool) $pdo->query("SHOW COLUMNS FROM $table LIKE " . $pdo->quote($column))->fetch();
+    ensure_order_code($pdo);
+    if (!$has('products', 'stock_qty')) {
+        $pdo->exec('ALTER TABLE products ADD COLUMN stock_qty INT NULL AFTER stock, ADD COLUMN show_stock TINYINT(1) NOT NULL DEFAULT 0 AFTER stock_qty');
+    }
+    $status = $pdo->query("SHOW COLUMNS FROM orders LIKE 'status'")->fetch();
+    if ($status && !str_contains((string) $status['Type'], 'vendido')) {
+        $pdo->exec("ALTER TABLE orders MODIFY status ENUM('nuevo', 'atendido', 'vendido', 'no_concretado', 'cancelado') NOT NULL DEFAULT 'nuevo'");
+    }
+    if (!$has('orders', 'invoice')) {
+        $pdo->exec('ALTER TABLE orders ADD COLUMN invoice VARCHAR(255) NULL AFTER status, ADD COLUMN close_note VARCHAR(255) NULL AFTER invoice, ADD COLUMN closed_at DATETIME NULL AFTER close_note');
     }
 }

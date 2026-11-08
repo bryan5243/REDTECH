@@ -63,12 +63,13 @@ page_header($product['name'] . ' | RedTech', $product['summary'], 'tienda', 'pag
           <h1><?= e($product['name']) ?></h1>
           <p class="pd-summary"><?= e($product['summary']) ?></p>
           <p class="pd-price<?= $product['price'] === null ? ' price-ask' : '' ?>"><?= e(money($product['price'])) ?></p>
+          <?php if (($note = stock_note($product)) !== ''): ?><p class="stock-note<?= $product['stock_qty'] <= 5 ? ' is-low' : '' ?>"><?= e($note) ?></p><?php endif; ?>
 
           <?php if ($product['stock'] !== 'agotado'): ?>
             <div class="pd-buy">
               <div class="qty" data-qty>
                 <button type="button" data-qty-minus aria-label="Restar uno"><?= icon('menos') ?></button>
-                <input type="number" min="1" max="999" value="1" aria-label="Cantidad" data-qty-input>
+                <input type="number" min="1" max="<?= $product['stock_qty'] ?? 999 ?>" value="1" aria-label="Cantidad" data-qty-input>
                 <button type="button" data-qty-plus aria-label="Sumar uno"><?= icon('mas') ?></button>
               </div>
               <button class="btn btn-primary btn-lg" type="button" data-add='<?= cart_payload($product) ?>' data-add-qty><?= icon('carrito') ?> Agregar al carrito</button>

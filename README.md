@@ -40,9 +40,9 @@ Desde el panel puedes:
 
 | Sección | Qué haces |
 |---|---|
-| Productos | Crear, editar, ocultar, destacar y eliminar productos; subir fotos y galería; precio (vacío = «precio a consultar») y disponibilidad. |
+| Productos | Crear, editar, ocultar, destacar y eliminar productos; subir fotos y galería; precio (vacío = «precio a consultar»), disponibilidad, unidades en stock (con opción de mostrarlas en la web) y botón «Vendido» para descontar stock. |
 | Categorías | Crear y ordenar categorías de la tienda. |
-| Pedidos | Ver los pedidos enviados por WhatsApp y marcarlos como atendidos. |
+| Pedidos | Pestañas Nuevos → Atendidos → Ventas realizadas / No concretados. Al cerrar una venta se sube la factura (PDF o foto, guardada fuera de la carpeta pública en `storage/facturas`) y se puede descontar el stock. |
 | Cotizaciones | Ver las solicitudes del formulario y responder por WhatsApp. |
 | Datos del sitio | Logo (normal y para fondo oscuro), colores de la marca, número de WhatsApp, teléfonos, correos, ubicación, horario, redes sociales, cifras, fotos del sitio y tu contraseña. |
 
@@ -53,7 +53,7 @@ Lo que no marques como **confirmado** aparece con la etiqueta «por confirmar» 
 ## Publicar en cPanel
 
 1. Copia el contenido de `public/` en `public_html/` (incluida la carpeta `uploads/` con su `.htaccess`).
-2. Copia `config/`, `src/` y `database/` junto a `public_html/`, fuera de esa carpeta.
+2. Copia `config/`, `src/`, `database/` y `storage/` junto a `public_html/`, fuera de esa carpeta. `storage/` debe tener permisos de escritura (ahí se guardan las facturas).
 3. Crea `config/config.php` en el servidor y ejecuta el instalador.
 4. Comprueba que `public_html/uploads/` tenga permisos de escritura para subir fotos.
 

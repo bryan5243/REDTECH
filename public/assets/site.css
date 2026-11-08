@@ -520,6 +520,7 @@ body.drawer-open { overflow: hidden; }
 .pd-info h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); }
 .pd-summary { font-size: 1.1rem; color: var(--muted); }
 .pd-price { font: 700 2.2rem/1 var(--head); color: var(--ink); margin: 1.5rem 0; }
+.pd-price + .stock-note { margin: -.6rem 0 1.4rem; }
 .pd-price.price-ask { font-size: 1.4rem; color: var(--blue); }
 .pd-buy { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: .8rem; }
 .pd-buy .qty { height: 52px; }
@@ -672,3 +673,11 @@ html, body { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) {
   .cart-btn.is-hit, .cart-btn.is-hit .icon, .drawer.is-entering .cart-item, .cart-sending::after { animation: none; }
 }
+
+/* Unidades disponibles (si el admin decide mostrarlas) */
+.stock-note { display: inline-flex; align-items: center; gap: .4rem; margin: -.4rem 0 .9rem; font: 600 .8rem/1.2 var(--body); color: #0b7a47; }
+.stock-note::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 20%, transparent); }
+.stock-note.is-low { color: #b54708; }
+.stock-note.is-low::before { animation: stock-pulse 1.6s ease-in-out infinite; }
+@keyframes stock-pulse { 50% { box-shadow: 0 0 0 6px transparent; } }
+@media (prefers-reduced-motion: reduce) { .stock-note.is-low::before { animation: none; } }

@@ -61,6 +61,8 @@ CREATE TABLE IF NOT EXISTS products (
   specs TEXT NULL,
   price DECIMAL(10,2) NULL,
   stock ENUM('disponible', 'bajo_pedido', 'agotado') NOT NULL DEFAULT 'disponible',
+  stock_qty INT NULL,
+  show_stock TINYINT(1) NOT NULL DEFAULT 0,
   image VARCHAR(500) NOT NULL DEFAULT '',
   gallery TEXT NULL,
   featured TINYINT(1) NOT NULL DEFAULT 0,
@@ -78,7 +80,10 @@ CREATE TABLE IF NOT EXISTS orders (
   notes TEXT NULL,
   items TEXT NOT NULL,
   total DECIMAL(10,2) NOT NULL DEFAULT 0,
-  status ENUM('nuevo', 'atendido', 'cancelado') NOT NULL DEFAULT 'nuevo',
+  status ENUM('nuevo', 'atendido', 'vendido', 'no_concretado', 'cancelado') NOT NULL DEFAULT 'nuevo',
+  invoice VARCHAR(255) NULL,
+  close_note VARCHAR(255) NULL,
+  closed_at DATETIME NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

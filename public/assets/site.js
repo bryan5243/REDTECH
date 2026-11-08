@@ -384,8 +384,11 @@
       const qty = qtyInput ? clampQty(qtyInput.value) : 1;
       const next = [...cart];
       const found = next.find((i) => i.id === product.id);
-      if (found) found.qty = clampQty(found.qty + qty);
-      else next.push({ ...product, qty });
+      // Si el producto lleva stock, no deja pedir más unidades de las que hay.
+      const before = found ? found.qty : 0;
+      const wanted = clampQty(before + qty);
+      const limited = product.max ? Math.min(wanted, product.max) : wanted;
+      if (found) { found.max = product.max; found.qty = limited; } else next.push({ ...product, qty: limited });
       update(next);
       add.classList.add('is-added');
       setTimeout(() => add.classList.remove('is-added'), 1200);
@@ -394,7 +397,7 @@
         if (btn) { btn.classList.remove('is-hit'); void btn.offsetWidth; btn.classList.add('is-hit'); }
         if (countEl) { countEl.classList.remove('bump'); void countEl.offsetWidth; countEl.classList.add('bump'); }
       });
-      toast(`Agregado: ${product.name}`);
+      toast(limited < wanted ? `Solo hay ${product.max} disponibles de ${product.name}` : `Agregado: ${product.name}`);
       return;
     }
     const inc = e.target.closest('[data-inc]');
@@ -403,7 +406,8 @@
     if (inc || dec) {
       const idx = +(inc || dec).dataset[inc ? 'inc' : 'dec'];
       const next = [...cart];
-      next[idx] = { ...next[idx], qty: clampQty(next[idx].qty + (inc ? 1 : -1)) };
+      const q = clampQty(next[idx].qty + (inc ? 1 : -1));
+      next[idx] = { ...next[idx], qty: next[idx].max ? Math.min(q, next[idx].max) : q };
       update(next);
     }
     if (rem) update(cart.filter((_, i) => i !== +rem.dataset.remove));
@@ -412,7 +416,8 @@
     const input = e.target.closest('[data-set]');
     if (!input) return;
     const next = [...cart];
-    next[+input.dataset.set] = { ...next[+input.dataset.set], qty: clampQty(input.value) };
+    const item = next[+input.dataset.set];
+    next[+input.dataset.set] = { ...item, qty: item.max ? Math.min(clampQty(input.value), item.max) : clampQty(input.value) };
     update(next);
   });
 

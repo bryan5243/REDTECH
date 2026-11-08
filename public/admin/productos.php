@@ -17,6 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'featured') {
         $pdo->prepare('UPDATE products SET featured = 1 - featured WHERE id = ?')->execute([$id]);
         flash('Producto actualizado.');
+    } elseif ($action === 'vendido') {
+        $qty = max(1, min(100000, (int) ($_POST['qty'] ?? 1)));
+        if (discount_stock($pdo, $id, $qty)) {
+            flash("Venta registrada: se descontaron $qty " . ($qty === 1 ? 'unidad' : 'unidades') . ' del stock.');
+        } else {
+            flash('Ese producto no lleva control de stock. Escribe sus unidades en «Editar».', 'error');
+        }
     } elseif ($action === 'delete') {
         $pdo->prepare('DELETE FROM products WHERE id = ?')->execute([$id]);
         flash('Producto eliminado.');
@@ -63,7 +70,22 @@ admin_header('Productos', 'productos');
         <td><div class="a-prod"><img src="<?= e(image_src($row['image'], 96, 96)) ?>" alt="" width="48" height="48" loading="lazy"><div><a href="producto.php?id=<?= (int) $row['id'] ?>"><b><?= e($row['name']) ?></b></a><?php if ($row['featured']): ?> <span class="tag tag-star">Destacado</span><?php endif; ?><br><small><?= e($row['brand']) ?></small></div></div></td>
         <td data-label="Categoría"><?= e($row['category_name']) ?></td>
         <td data-label="Precio"><?= e(money($row['price'])) ?></td>
-        <td data-label="Stock"><span class="tag tag-<?= e($row['stock']) ?>"><?= e(stock_label($row['stock'])) ?></span></td>
+        <td data-label="Stock">
+          <div class="a-stock">
+            <span class="tag tag-<?= e($row['stock']) ?>"><?= e(stock_label($row['stock'])) ?></span>
+            <?php if ($row['stock_qty'] !== null): ?>
+              <small><?= (int) $row['stock_qty'] ?> <?= (int) $row['stock_qty'] === 1 ? 'unidad' : 'unidades' ?><?= $row['show_stock'] ? ' · visible en la web' : '' ?></small>
+              <?php if ($row['stock_qty'] > 0): ?>
+                <form method="post" class="a-sell"><?= csrf_field() ?><input type="hidden" name="id" value="<?= (int) $row['id'] ?>"><input type="hidden" name="action" value="vendido"><input type="hidden" name="q" value="<?= e($q) ?>"><input type="hidden" name="categoria" value="<?= $cat ?: '' ?>">
+                  <input type="number" name="qty" value="1" min="1" max="<?= (int) $row['stock_qty'] ?>" aria-label="Unidades vendidas de <?= e($row['name']) ?>">
+                  <button class="a-btn a-btn-sm" type="submit">Vendido</button>
+                </form>
+              <?php endif; ?>
+            <?php else: ?>
+              <small>Sin control de stock</small>
+            <?php endif; ?>
+          </div>
+        </td>
         <td data-label="Estado"><?= (int) $row['active'] === 1 ? 'Visible' : 'Oculto' ?></td>
         <td class="a-actions">
           <a class="a-btn a-btn-sm" href="producto.php?id=<?= (int) $row['id'] ?>">Editar</a>
