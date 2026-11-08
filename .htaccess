@@ -10,7 +10,7 @@ Options -Indexes
 
   RewriteRule "(^|/)\.(?!well-known)" - [F]
   RewriteRule "^(config|src|database|storage)(/|$)" - [F]
-  RewriteRule "\.(md|sql|log)$" - [F]
+  RewriteRule "\.(md|sql|log|sqlite|sqlite-wal|sqlite-shm)$" - [F]
 
   RewriteRule "^admin$" %{REQUEST_URI}/ [R=301,L]
 

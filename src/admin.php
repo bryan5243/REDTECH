@@ -2,54 +2,64 @@
 
 declare(strict_types=1);
 
-// Panel de administración: sesión, seguridad y plantilla común.
+// Panel: sesión, permisos, seguridad y plantilla común.
 define('BASE', '../');
+define('PUBLIC_DIR', dirname(__DIR__) . '/public');
 require __DIR__ . '/bootstrap.php';
-require __DIR__ . '/catalog.php';
+require __DIR__ . '/menu.php';
+require __DIR__ . '/orders.php';
 require_once __DIR__ . '/install.php';
 
 start_session();
 header('X-Robots-Tag: noindex, nofollow');
 header('Cache-Control: no-store');
 
+/** Roles: el administrador ve todo; el personal de cocina solo Cocina y Reservas. */
+const ROLES = ['admin' => 'Administrador', 'cocina' => 'Cocina y meseros'];
+const STAFF_PAGES = ['cocina', 'reservas'];
+
 function admin_user(): ?array
 {
     return $_SESSION['admin'] ?? null;
 }
 
-function require_admin(): PDO
+function is_owner(): bool
+{
+    return (admin_user()['role'] ?? '') === 'admin';
+}
+
+/** Exige sesión. $page es la sección; el personal de cocina solo entra a STAFF_PAGES. */
+function require_admin(string $page = ''): PDO
 {
     $pdo = db();
     if ($pdo === null) {
         admin_header('Base de datos');
-        echo '<div class="panel"><h1>Falta la base de datos</h1><p>Configura MySQL en <code>config/config.php</code> y ejecuta la instalación. Revisa el README.</p></div>';
+        echo '<div class="panel"><h1>No hay conexión con la base de datos</h1><p>Revisa los datos de <code>config/config.php</code>. Si quieres usar la demo sin configurar nada, borra ese archivo y se usará SQLite.</p></div>';
         admin_footer();
         exit;
     }
     if (admin_user() === null) {
+        if (isset($_GET['json']) || str_contains((string) ($_SERVER['CONTENT_TYPE'] ?? ''), 'json')) {
+            json_out(['ok' => false, 'login' => true], 401);
+        }
         header('Location: index.php');
         exit;
     }
-    // La sesión del panel caduca tras 2 horas sin actividad.
-    if (time() - ($_SESSION['admin_seen'] ?? 0) > 7200) {
+    // La sesión caduca tras 12 horas sin actividad (la pantalla de cocina queda abierta todo el turno).
+    if (time() - ($_SESSION['admin_seen'] ?? 0) > 43200) {
         unset($_SESSION['admin']);
         header('Location: index.php?caducada=1');
         exit;
     }
     $_SESSION['admin_seen'] = time();
-    // Pone al día la base del hosting la primera vez que se entra con una versión nueva.
-    if (($_SESSION['schema'] ?? 0) < SCHEMA_VERSION) {
-        try {
-            migrate_schema($pdo);
-            $_SESSION['schema'] = SCHEMA_VERSION;
-        } catch (PDOException $exception) {
-            error_log('RedTech migración: ' . $exception->getMessage());
-        }
+    if ($page !== '' && !is_owner() && !in_array($page, STAFF_PAGES, true)) {
+        header('Location: cocina.php');
+        exit;
     }
     return $pdo;
 }
 
-/** Verifica el token CSRF de un POST; si falla, corta la petición. */
+/** Verifica el token CSRF de un POST de formulario; si falla, corta la petición. */
 function check_post(): void
 {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !csrf_valid($_POST['csrf'] ?? null)) {
@@ -89,8 +99,8 @@ function slugify(string $text): string
 }
 
 /**
- * Guarda una imagen subida en public/uploads y devuelve su ruta relativa (uploads/...),
- * o null si no se subió ninguna. Lanza RuntimeException si el archivo no es válido.
+ * Guarda una imagen subida en public/uploads y devuelve su ruta (uploads/...), o null si no se subió.
+ * Lanza RuntimeException si el archivo no es una imagen válida.
  */
 function save_upload(string $field): ?string
 {
@@ -99,7 +109,7 @@ function save_upload(string $field): ?string
         return null;
     }
     if ($file['error'] !== UPLOAD_ERR_OK) {
-        throw new RuntimeException('No se pudo subir la imagen. Prueba con un archivo más liviano.');
+        throw new RuntimeException('No se pudo subir la imagen. Prueba con un archivo más liviano (máximo 4 MB).');
     }
     if ($file['size'] > 4 * 1024 * 1024) {
         throw new RuntimeException('La imagen supera los 4 MB.');
@@ -120,80 +130,23 @@ function save_upload(string $field): ?string
     return 'uploads/' . date('Ym') . '/' . $name;
 }
 
-/**
- * Guarda una factura (PDF, JPG, PNG o WEBP) fuera de la carpeta pública, en storage/facturas.
- * Devuelve su ruta relativa a la raíz del proyecto, o null si no se subió nada.
- */
-function save_invoice(string $field): ?string
-{
-    $file = $_FILES[$field] ?? null;
-    if (!$file || ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
-        return null;
-    }
-    if ($file['error'] !== UPLOAD_ERR_OK || $file['size'] > 8 * 1024 * 1024) {
-        throw new RuntimeException('No se pudo subir la factura. Debe pesar menos de 8 MB.');
-    }
-    $head = (string) file_get_contents($file['tmp_name'], false, null, 0, 5);
-    $info = @getimagesize($file['tmp_name']);
-    $types = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
-    if ($head === '%PDF-') {
-        $ext = 'pdf';
-    } elseif ($info && isset($types[$info[2]])) {
-        $ext = $types[$info[2]];
-    } else {
-        throw new RuntimeException('La factura debe ser un PDF o una imagen JPG, PNG o WEBP.');
-    }
-    $relative = 'storage/facturas/' . date('Ym');
-    $dir = ROOT . '/' . $relative;
-    if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
-        throw new RuntimeException('No se pudo crear la carpeta de facturas.');
-    }
-    $name = bin2hex(random_bytes(8)) . '.' . $ext;
-    if (!move_uploaded_file($file['tmp_name'], $dir . '/' . $name)) {
-        throw new RuntimeException('No se pudo guardar la factura.');
-    }
-    return $relative . '/' . $name;
-}
-
-/**
- * Descuenta unidades vendidas del stock. Los productos sin control de stock (vacío) no cambian.
- * Si un producto llega a 0, queda como «Agotado». Devuelve true si el producto lleva control de stock.
- */
-function discount_stock(PDO $pdo, int $productId, int $qty): bool
-{
-    $statement = $pdo->prepare('UPDATE products SET stock_qty = GREATEST(stock_qty - ?, 0) WHERE id = ? AND stock_qty IS NOT NULL');
-    $statement->execute([max(0, $qty), $productId]);
-    if ($statement->rowCount() === 0) {
-        return false;
-    }
-    $pdo->prepare("UPDATE products SET stock = 'agotado' WHERE id = ? AND stock_qty = 0")->execute([$productId]);
-    return true;
-}
-
-/** Estados de un pedido: [nombre visible, clase de etiqueta]. */
-function order_statuses(): array
-{
-    return [
-        'nuevo' => ['Nuevo', 'tag-new'],
-        'atendido' => ['Atendido', 'tag-bajo_pedido'],
-        'vendido' => ['Venta realizada', 'tag-disponible'],
-        'no_concretado' => ['No se concretó', 'tag-agotado'],
-        'cancelado' => ['No se concretó', 'tag-agotado'],
-    ];
-}
-
-function admin_header(string $title, string $active = ''): void
+function admin_header(string $title, string $active = '', string $bodyClass = ''): void
 {
     $user = admin_user();
     $links = [
-        'inicio' => ['index.php', 'Resumen', 'tienda'],
-        'productos' => ['productos.php', 'Productos', 'carrito'],
-        'categorias' => ['categorias.php', 'Categorías', 'cables'],
-        'pedidos' => ['pedidos.php', 'Pedidos', 'whatsapp'],
-        'solicitudes' => ['solicitudes.php', 'Cotizaciones', 'correo'],
-        'ajustes' => ['ajustes.php', 'Datos del sitio', 'soporte'],
+        'inicio' => ['index.php', 'Resumen', 'grafico'],
+        'cocina' => ['cocina.php', 'Cocina', 'cocina'],
+        'pedidos' => ['pedidos.php', 'Pedidos', 'lista'],
+        'reservas' => ['reservas.php', 'Reservas', 'calendario'],
+        'platos' => ['platos.php', 'Menú', 'plato'],
+        'mesas' => ['mesas.php', 'Mesas y QR', 'qr'],
+        'ajustes' => ['ajustes.php', 'Ajustes', 'ajustes'],
+        'personal' => ['personal.php', 'Personal', 'usuarios'],
         'respaldo' => ['respaldo.php', 'Respaldo', 'escudo'],
     ];
+    if ($user && !is_owner()) {
+        $links = array_intersect_key($links, array_flip(STAFF_PAGES));
+    }
     ?>
 <!doctype html>
 <html lang="es">
@@ -201,24 +154,22 @@ function admin_header(string $title, string $active = ''): void
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title><?= e($title) ?> | Panel RedTech</title>
+  <title><?= e($title) ?> · Panel <?= e(setting('name')) ?></title>
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="../assets/img/favicon-32.png" type="image/png" sizes="32x32">
-  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="../assets/admin.css?v=6">
+  <link rel="stylesheet" href="../assets/admin.css?v=<?= ASSET_VERSION_ADMIN ?>">
   <?= brand_style() ?>
 </head>
-<body class="<?= $user ? 'is-auth' : 'is-guest' ?>">
+<body class="<?= $user ? 'is-auth' : 'is-guest' ?> <?= e($bodyClass) ?>">
 <?php if ($user): ?>
   <header class="a-top">
-    <a class="a-logo" href="index.php"><?= site_logo()[1] ?> <small>Panel</small></a>
+    <a class="a-logo" href="<?= is_owner() ? 'index.php' : 'cocina.php' ?>"><?= site_logo() ?> <small>Panel</small></a>
     <nav class="a-nav" aria-label="Panel">
       <?php foreach ($links as $key => [$href, $label, $ico]): ?>
         <a href="<?= $href ?>"<?= $key === $active ? ' aria-current="page"' : '' ?>><?= icon($ico) ?><span><?= $label ?></span></a>
       <?php endforeach; ?>
     </nav>
     <div class="a-user">
-      <a href="../" target="_blank" rel="noopener">Ver sitio</a>
+      <a href="../" target="_blank" rel="noopener">Ver menú</a>
       <form method="post" action="salir.php"><?= csrf_field() ?><button type="submit">Salir (<?= e($user['username']) ?>)</button></form>
     </div>
   </header>
@@ -229,17 +180,26 @@ function admin_header(string $title, string $active = ''): void
 <?php endif;
 }
 
-function admin_footer(): void
+const ASSET_VERSION_ADMIN = '1';
+
+function admin_footer(array $scripts = []): void
 {
     ?>
 </main>
 <script>
 document.querySelectorAll('[data-confirm]').forEach(f => f.addEventListener('submit', e => { if (!confirm(f.dataset.confirm)) e.preventDefault(); }));
 document.querySelectorAll('input[type=file][data-preview]').forEach(i => i.addEventListener('change', () => {
-  const img = document.querySelector(i.dataset.preview); if (img && i.files[0]) { img.src = URL.createObjectURL(i.files[0]); img.hidden = false; const empty = img.nextElementSibling; if (empty && empty.tagName === "SPAN") empty.remove(); }
+  const img = document.querySelector(i.dataset.preview); if (img && i.files[0]) { img.src = URL.createObjectURL(i.files[0]); img.hidden = false; }
 }));
 </script>
+<?php foreach ($scripts as $script): ?><script src="<?= e($script) ?>?v=<?= ASSET_VERSION_ADMIN ?>" defer></script><?php endforeach; ?>
 </body>
 </html>
 <?php
+}
+
+/** Fecha y hora cortas para el panel. */
+function short_dt(?string $value): string
+{
+    return $value ? date('d/m H:i', strtotime($value)) : '';
 }

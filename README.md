@@ -1,78 +1,73 @@
-# RedTech
+# Menú digital con QR para restaurantes
 
-Sitio web y tienda de RedTech en PHP puro y MySQL:
+Demo de venta para restaurantes y marisquerías (restaurante ficticio: **Marisquería La Gaviota**, Puerto Jelí, Santa Rosa, El Oro). PHP puro, sin WordPress.
 
-- **Inicio** (`public/index.php`): servicios, equipos destacados, proceso, sectores, preguntas frecuentes y formulario de cotización.
-- **Tienda** (`public/tienda.php`, `public/producto.php`): catálogo con categorías, búsqueda, orden y ficha de producto.
-- **Carrito por WhatsApp**: el cliente arma su pedido y lo envía por WhatsApp con un mensaje ya escrito. El pedido también queda guardado en el panel.
-- **Panel de administración** (`public/admin/`): productos, categorías, pedidos, cotizaciones, teléfonos, correos, cifras, fotos y número de WhatsApp.
+## Qué hace
 
-## Ver el sitio en tu computadora
+**Para el cliente (celular)**
+- Menú por categorías con fotos, favoritos de la casa, platos agotados y búsqueda por categorías fija arriba.
+- **QR por mesa** (`/?mesa=4`): el pedido llega a la **pantalla de cocina** con el número de mesa. No hace falta WhatsApp.
+- Carrito con indicaciones por plato ("sin cebolla"), **en mesa, para llevar o a domicilio** (con costo de envío).
+- Pago para llevar/domicilio: **efectivo o transferencia** (muestra banco, número de cuenta con botón Copiar y titular).
+- Página del pedido **en vivo**: recibido → preparando (con minutos estimados) → listo → servido. Suena y vibra cuando está listo.
+- Desde la mesa: **pedir algo más** (se suma al mismo pedido como "ronda 2"), **llamar al mesero** y **pedir la cuenta**.
+- **Reservas**: formulario con fecha, hora y personas; el cliente ve si ya se confirmó.
+- WhatsApp es **opcional** (copia del pedido o de la reserva), se activa en Ajustes.
+
+**Para el restaurante (`/admin`)**
+- **Cocina**: tablero en vivo (Nuevos, Preparando, Listos, Mesas atendidas). Un toque para dar el tiempo (10, 15, 20, 30, 45 min), +5 min, Listo, Servido y Cobrado. Avisos de "llama al mesero" / "pide la cuenta", sonido y pantalla completa.
+- **Menú**: platos con foto, precio editable en la lista, interruptor **Disponible/Agotado**, favoritos, etiquetas y categorías.
+- **Pedidos**: historial por día con totales (mesa, efectivo, transferencia).
+- **Reservas**: confirmar, sin mesa, llegó, canceló, y botón para avisar al cliente por WhatsApp.
+- **Mesas y QR**: imprime un QR por mesa y otro para pedidos para llevar.
+- **Ajustes**: nombre, textos, dirección, mapa, horario, redes, tipos de pedido, envío, cuenta bancaria, reservas, WhatsApp, logo, colores y foto de portada.
+- **Personal**: usuarios de cocina/meseros que solo ven Cocina y Reservas (sin precios ni ventas).
+- **Respaldo**: descarga la base de datos (.sql) o un ZIP con base y fotos.
+
+## Probar la demo en la computadora (sin configurar nada)
+
+Sin `config/config.php`, el sistema crea solo una base **SQLite** en `storage/demo.sqlite` con el menú de ejemplo y dos usuarios:
+
+| Usuario | Contraseña | Ve |
+|---|---|---|
+| `admin` | `gaviota2026` | Todo el panel |
+| `cocina` | `cocina2026` | Cocina y Reservas |
 
 ```bash
-php -S localhost:8000 -t public
+php -S 0.0.0.0:8000 -t public
 ```
 
-Abre http://localhost:8000. Sin MySQL, el sitio muestra el catálogo de ejemplo de `config/catalog.php` y los datos de `config/defaults.php`, pero no guarda cotizaciones ni pedidos y el panel no funciona.
+- Menú: http://localhost:8000 · Mesa 4: http://localhost:8000/?mesa=4 · Panel: http://localhost:8000/admin
+- **Con XAMPP**: copia la carpeta en `htdocs/` (el `.htaccess` de la raíz sirve `public/`). Necesita la extensión `pdo_sqlite` (viene activa en XAMPP; si no, en `php.ini` quita el `;` de `extension=pdo_sqlite`).
+- **Desde el celular** en el mismo WiFi: usa la IP de la computadora (por ejemplo `http://192.168.1.10:8000/?mesa=4`). En **Mesas y QR** escribe esa dirección para que los QR funcionen.
+- En el **Resumen** del panel están los botones **Crear pedidos de ejemplo** y **Vaciar pedidos y reservas** para preparar cada visita.
 
-## Conectar MySQL
+Para una visita de venta: abre el panel en la laptop o tablet en **Cocina**, dale al cliente el celular con el QR de una mesa, que pida, y verá cómo llega el pedido y cómo cambia el estado en su celular.
 
-1. Crea la base de datos y su usuario (en cPanel: **Bases de datos MySQL**).
-2. Copia `config/config.example.php` como `config/config.php` y completa los datos de MySQL.
-3. En el mismo archivo, escribe una clave larga en `admin_setup_key`.
-4. Ejecuta el instalador (en cPanel puedes usar **Terminal**):
+## Usarlo para un restaurante real
 
-```bash
-php database/install.php
-```
+1. Crea la base de datos:
+   - **MySQL** (Hostinger, cPanel, XAMPP): crea la base y su usuario.
+   - **Supabase** (PostgreSQL): en *Project Settings → Database* copia host, puerto, usuario y contraseña. El hosting debe tener la extensión `pdo_pgsql`.
+2. Copia `config/config.example.php` como `config/config.php`, completa los datos y escribe una `admin_setup_key` larga.
+3. Abre `/admin/`, escribe la clave para crear las tablas (se carga el menú de ejemplo) y crea tu usuario.
+4. Borra `admin_setup_key` de `config/config.php`.
+5. En **Ajustes**: cambia nombre, textos, horario, cuenta bancaria y desmarca «Mostrar el aviso Demostración». En **Menú** carga los platos reales con sus fotos. En **Mesas y QR** pon la dirección pública e imprime los códigos.
 
-El instalador crea las tablas y carga el catálogo de ejemplo. Se puede repetir sin borrar tus datos.
+**Publicar**: sube todo el proyecto (por ejemplo a `public_html/` o `htdocs/`). El `.htaccess` de la raíz sirve `public/` y bloquea `config/`, `src/` y `storage/`. `public/uploads/` debe tener permiso de escritura para las fotos.
 
-**Sin terminal** (por ejemplo, en un hosting gratuito): abre `/admin/`. Si la conexión funciona pero faltan las tablas, el panel te pide la clave `admin_setup_key` y las crea.
-
-## Panel de administración
-
-1. Entra a `/admin/`.
-2. La primera vez te pedirá la clave `admin_setup_key`, un usuario y una contraseña de al menos 10 caracteres.
-3. Ya con tu usuario, borra `admin_setup_key` de `config/config.php`.
-
-Desde el panel puedes:
-
-| Sección | Qué haces |
-|---|---|
-| Productos | Crear, editar, ocultar, destacar y eliminar productos; subir fotos y galería; precio (vacío = «precio a consultar»), disponibilidad, unidades en stock (con opción de mostrarlas en la web) y botón «Vendido» para descontar stock. |
-| Categorías | Crear y ordenar categorías de la tienda. |
-| Pedidos | Pestañas Nuevos → Atendidos → Ventas realizadas / No concretados. Al cerrar una venta se sube la factura (PDF o foto, guardada fuera de la carpeta pública en `storage/facturas`) y se puede descontar el stock. |
-| Cotizaciones | Ver las solicitudes del formulario y responder por WhatsApp. |
-| Datos del sitio | Logo (normal y para fondo oscuro), colores de la marca, número de WhatsApp, teléfonos, correos, ubicación, horario, redes sociales, cifras, fotos del sitio y tu contraseña. |
-| Respaldo | Descarga con un botón un ZIP con la base de datos, el código, las fotos y las facturas, o solo la base de datos (.sql, se restaura con phpMyAdmin → Importar). |
-
-Lo que no marques como **confirmado** aparece con la etiqueta «por confirmar» y sin enlaces. El botón flotante y el carrito de WhatsApp funcionan cuando hay un número de WhatsApp o un teléfono confirmado.
-
-**Antes de publicar:** carga tus productos reales, revisa los textos de `src/content.php` y desmarca el aviso «Catálogo de demostración» en Datos del sitio.
-
-## Publicar en cPanel
-
-1. Copia el contenido de `public/` en `public_html/` (incluida la carpeta `uploads/` con su `.htaccess`).
-2. Copia `config/`, `src/`, `database/` y `storage/` junto a `public_html/`, fuera de esa carpeta. `storage/` debe tener permisos de escritura (ahí se guardan las facturas).
-3. Crea `config/config.php` en el servidor y ejecuta el instalador.
-4. Comprueba que `public_html/uploads/` tenga permisos de escritura para subir fotos.
-
-## Publicar en un hosting gratuito (InfinityFree u otro con PHP y MySQL)
-
-1. Crea la cuenta y el sitio. Te dan un subdominio gratis, por ejemplo `redtech.infinityfreeapp.com`.
-2. En el panel, abre **MySQL Databases** y crea una base. Anota el host (por ejemplo `sql123.infinityfree.com`), el nombre, el usuario y la contraseña.
-3. Sube **todo el proyecto** dentro de `htdocs/` con el administrador de archivos o por FTP (FileZilla). El `.htaccess` de la raíz sirve `public/` como página principal y bloquea `config/`, `src/` y `database/`.
-4. En `htdocs/config/`, copia `config.example.php` como `config.php` y escribe los datos de MySQL y una `admin_setup_key`.
-5. Abre `https://tu-subdominio/admin/`, escribe la clave para instalar la base de datos y luego crea tu usuario.
+> El modo demo (SQLite) muestra los usuarios de prueba en la pantalla de ingreso. Para un restaurante real usa siempre `config/config.php` con MySQL o Supabase.
 
 ## Seguridad
 
-- Contraseñas con `password_hash`, sesión que caduca a las 2 horas y bloqueo de 15 minutos tras 5 intentos fallidos.
-- Todos los formularios llevan token CSRF y las consultas usan sentencias preparadas.
-- Las fotos subidas se validan como imagen real (JPG, PNG, WEBP o GIF, máximo 4 MB), se guardan con nombre aleatorio y `uploads/.htaccess` impide ejecutar código ahí.
-- Los totales de los pedidos se calculan en el servidor con los precios del catálogo.
+- Contraseñas con `password_hash`, bloqueo de 15 minutos tras 5 intentos fallidos y sesiones con token CSRF en cada formulario.
+- Los precios y totales se calculan en el servidor; el navegador solo manda qué platos y cuántos.
+- Cada pedido tiene un código aleatorio: no se puede ver el pedido de otra mesa adivinando números.
+- Fotos validadas como imagen real (máx. 4 MB), con nombre aleatorio; `uploads/.htaccess` impide ejecutar código.
 
-## Fuentes e imágenes
+## Archivos
 
-Las fuentes Sora e Inter están en `public/assets/fonts/` (licencia SIL Open Font License). Las fotos de ejemplo vienen de Unsplash: ver `CREDITS.md`.
+- `public/`: menú (`index.php`), pedido (`pedido.php`), estado (`estado.php`), reservas (`reservar.php`) y el panel (`admin/`).
+- `src/`: conexión (MySQL, PostgreSQL o SQLite), pedidos, menú, instalación y respaldo.
+- `config/demo.php`: datos del restaurante de ejemplo (se copian a la base al instalar).
+- Fuentes Fraunces e Inter (licencia SIL OFL) y generador de QR `qrcode-generator` (MIT) incluidos en `public/assets/`.

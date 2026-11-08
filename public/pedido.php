@@ -2,61 +2,42 @@
 
 declare(strict_types=1);
 
-// Registra en la base de datos el pedido que el cliente envía por WhatsApp,
-// para verlo después en /admin. Los precios se toman del catálogo, no del navegador.
+// Recibe el pedido del carrito (o una ronda más para un pedido abierto) y lo deja en la pantalla de cocina.
+// Los precios se toman de la base de datos, no del navegador.
 require __DIR__ . '/../src/bootstrap.php';
-require __DIR__ . '/../src/catalog.php';
-require_once __DIR__ . '/../src/install.php';
+require __DIR__ . '/../src/orders.php';
 
 start_session();
-header('Content-Type: application/json; charset=utf-8');
 
 $input = json_decode((string) file_get_contents('php://input'), true);
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !is_array($input) || !csrf_valid($input['csrf'] ?? null)) {
-    http_response_code(400);
-    echo json_encode(['ok' => false]);
-    exit;
+    json_out(['ok' => false, 'error' => 'La página caducó. Recárgala e inténtalo de nuevo.'], 400);
 }
-
-$name = trim(mb_substr((string) ($input['nombre'] ?? ''), 0, 120));
-$city = trim(mb_substr((string) ($input['ciudad'] ?? ''), 0, 120));
-$notes = trim(mb_substr((string) ($input['notas'] ?? ''), 0, 500));
-$items = is_array($input['items'] ?? null) ? array_slice($input['items'], 0, 50) : [];
 $pdo = db();
-
-if ($name === '' || $items === [] || $pdo === null) {
-    echo json_encode(['ok' => false]);
-    exit;
+if ($pdo === null) {
+    json_out(['ok' => false, 'error' => 'No pudimos registrar el pedido. Pídelo al mesero, por favor.'], 503);
 }
-
-$lines = [];
-$total = 0.0;
-$statement = $pdo->prepare('SELECT id, slug, name, price, image FROM products WHERE id = ? AND active = 1');
-foreach ($items as $item) {
-    $qty = max(1, min(999, (int) ($item['qty'] ?? 1)));
-    $statement->execute([(int) ($item['id'] ?? 0)]);
-    $product = $statement->fetch();
-    if (!$product) {
-        continue;
-    }
-    $price = $product['price'] === null ? null : (float) $product['price'];
-    $total += ($price ?? 0) * $qty;
-    $lines[] = ['id' => (int) $product['id'], 'slug' => $product['slug'], 'name' => $product['name'], 'image' => $product['image'], 'qty' => $qty, 'price' => $price];
+if (!accepting_orders()) {
+    json_out(['ok' => false, 'error' => 'En este momento no estamos recibiendo pedidos en línea.']);
 }
-
-if ($lines === []) {
-    echo json_encode(['ok' => false]);
-    exit;
+// Evita envíos repetidos por doble toque.
+if (time() - (int) ($_SESSION['last_order'] ?? 0) < 8) {
+    json_out(['ok' => false, 'error' => 'Espera unos segundos antes de enviar otro pedido.']);
 }
 
 try {
-    ensure_order_code($pdo);
-    // Código aleatorio: la página del pedido no se puede adivinar recorriendo números.
-    $code = bin2hex(random_bytes(6));
-    $pdo->prepare('INSERT INTO orders (code, customer_name, city, notes, items, total) VALUES (?, ?, ?, ?, ?, ?)')
-        ->execute([$code, $name, $city ?: null, $notes ?: null, json_encode($lines, JSON_UNESCAPED_UNICODE), $total]);
-    echo json_encode(['ok' => true, 'code' => $code, 'number' => (int) $pdo->lastInsertId()]);
-} catch (PDOException $exception) {
-    error_log('RedTech DB: ' . $exception->getMessage());
-    echo json_encode(['ok' => false]);
+    $code = (string) ($input['code'] ?? '');
+    $order = $code !== '' ? order_by_code($pdo, $code) : null;
+    if ($order !== null && in_array($order['status'], OPEN_STATUSES, true)) {
+        add_round($pdo, $order, (array) ($input['items'] ?? []), trim((string) ($input['notes'] ?? '')));
+    } else {
+        $code = create_order($pdo, $input);
+    }
+    $_SESSION['last_order'] = time();
+    json_out(['ok' => true, 'code' => $code]);
+} catch (InvalidArgumentException $exception) {
+    json_out(['ok' => false, 'error' => $exception->getMessage()]);
+} catch (Throwable $exception) {
+    error_log('Menú pedido: ' . $exception->getMessage());
+    json_out(['ok' => false, 'error' => 'No pudimos registrar el pedido. Inténtalo de nuevo o pídelo al mesero.'], 500);
 }
