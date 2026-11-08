@@ -192,6 +192,7 @@ function admin_header(string $title, string $active = ''): void
         'pedidos' => ['pedidos.php', 'Pedidos', 'whatsapp'],
         'solicitudes' => ['solicitudes.php', 'Cotizaciones', 'correo'],
         'ajustes' => ['ajustes.php', 'Datos del sitio', 'soporte'],
+        'respaldo' => ['respaldo.php', 'Respaldo', 'escudo'],
     ];
     ?>
 <!doctype html>
@@ -204,7 +205,7 @@ function admin_header(string $title, string $active = ''): void
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="../assets/img/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="../assets/admin.css?v=5">
+  <link rel="stylesheet" href="../assets/admin.css?v=6">
   <?= brand_style() ?>
 </head>
 <body class="<?= $user ? 'is-auth' : 'is-guest' ?>">
