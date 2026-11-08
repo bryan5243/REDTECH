@@ -37,7 +37,9 @@ function page_header(string $title, string $description, string $active = '', st
   <link rel="preload" href="<?= url('assets/fonts/sora-latin.woff2') ?>" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="<?= url('assets/fonts/inter-latin.woff2') ?>" as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="<?= url('assets/img/favicon.svg') ?>" type="image/svg+xml">
-  <link rel="stylesheet" href="<?= url('assets/site.css') ?>?v=6">
+  <link rel="icon" href="<?= url('assets/img/favicon-32.png') ?>" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="<?= url('assets/img/apple-touch-icon.png') ?>">
+  <link rel="stylesheet" href="<?= url('assets/site.css') ?>?v=7">
   <?= brand_style() ?>
   <script src="<?= url('assets/site.js') ?>?v=6" defer></script>
 </head>

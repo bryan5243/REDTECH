@@ -15,7 +15,7 @@ code { background: #e9eef7; padding: .1em .35em; border-radius: 5px; font-size: 
 .logo-mark i { display: block; background: #fff; border-radius: 2px; height: 40%; }
 .logo-mark i:nth-child(2) { height: 70%; } .logo-mark i:nth-child(3) { height: 100%; }
 .a-logo { display: inline-flex; align-items: center; gap: .5rem; font: 700 1.2rem "Sora", sans-serif; color: var(--ink); }
-.a-logo b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.a-logo b { display: inline-block; color: var(--blue); background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 .a-logo .logo-img { height: 34px; width: auto; max-width: 160px; object-fit: contain; } .a-logo .logo-img-dark { display: none; }
 .a-logo small { font: 600 .7rem "Inter", sans-serif; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-left: .2rem; }
 
