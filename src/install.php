@@ -42,6 +42,7 @@ function schema_sql(string $driver): array
             featured SMALLINT NOT NULL DEFAULT 0,
             active SMALLINT NOT NULL DEFAULT 1,
             sort_order INT NOT NULL DEFAULT 0,
+            options VARCHAR(1000) NOT NULL DEFAULT '',
             created_at {DT} NULL
         )",
         "CREATE TABLE IF NOT EXISTS orders (
@@ -74,6 +75,7 @@ function schema_sql(string $driver): array
             price DECIMAL(10,2) NOT NULL DEFAULT 0,
             qty INT NOT NULL DEFAULT 1,
             note VARCHAR(160) NOT NULL DEFAULT '',
+            options VARCHAR(255) NOT NULL DEFAULT '',
             created_at {DT} NULL
         )",
         "CREATE TABLE IF NOT EXISTS reservations (
@@ -139,6 +141,7 @@ function run_install(PDO $pdo, bool $demoUsers = false): array
             }
         }
     }
+    migrate_schema($pdo);
     $log[] = 'Tablas creadas.';
 
     $seed = require ROOT . '/config/demo.php';
@@ -174,8 +177,8 @@ function seed_menu(PDO $pdo, array $seed): void
         $category->execute([$c['slug'], $c['name'], $c['description'], $c['kind'], $i]);
         $ids[$c['slug']] = insert_id($pdo, 'categories');
     }
-    $dish = $pdo->prepare('INSERT INTO dishes (category_id, name, description, price, image, badge, available, featured, sort_order, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $dish = $pdo->prepare('INSERT INTO dishes (category_id, name, description, price, image, badge, available, featured, sort_order, options, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     foreach ($seed['dishes'] as $i => $d) {
-        $dish->execute([$ids[$d['category']], $d['name'], $d['description'], $d['price'], $d['image'] ?? '', $d['badge'] ?? '', $d['available'] ?? 1, $d['featured'] ?? 0, $i, now()]);
+        $dish->execute([$ids[$d['category']], $d['name'], $d['description'], $d['price'], $d['image'] ?? '', $d['badge'] ?? '', $d['available'] ?? 1, $d['featured'] ?? 0, $i, implode("\n", $d['options'] ?? []), now()]);
     }
 }

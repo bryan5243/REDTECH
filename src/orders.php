@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/menu.php';
+
 /** Tipos de pedido. */
 const ORDER_KINDS = ['mesa' => 'En mesa', 'llevar' => 'Para llevar', 'domicilio' => 'A domicilio'];
 
@@ -54,7 +56,7 @@ function enabled_kinds(): array
  */
 function priced_lines(PDO $pdo, array $items): array
 {
-    $statement = $pdo->prepare('SELECT d.id, d.name, d.price, d.available FROM dishes d JOIN categories c ON c.id = d.category_id WHERE d.id = ? AND d.active = 1 AND c.active = 1');
+    $statement = $pdo->prepare('SELECT d.id, d.name, d.price, d.available, d.options FROM dishes d JOIN categories c ON c.id = d.category_id WHERE d.id = ? AND d.active = 1 AND c.active = 1');
     $lines = [];
     $subtotal = 0.0;
     foreach (array_slice($items, 0, 40) as $item) {
@@ -68,8 +70,21 @@ function priced_lines(PDO $pdo, array $items): array
         }
         $qty = max(1, min(50, (int) ($item['qty'] ?? 1)));
         $price = (float) $dish['price'];
+        // Opciones elegidas: se validan contra las del plato y los adicionales suman su precio.
+        $available = dish_options((string) $dish['options']);
+        $picked = array_unique(array_map('intval', array_filter((array) ($item['opts'] ?? []), 'is_numeric')));
+        sort($picked);
+        $chosen = [];
+        foreach ($picked as $index) {
+            if (isset($available[$index])) {
+                $option = $available[$index];
+                $price += $option['price'];
+                $chosen[] = ($option['type'] === 'extra' ? '+ ' : '') . $option['name'];
+            }
+        }
+        $price = round($price, 2);
         $subtotal += $price * $qty;
-        $lines[] = ['dish_id' => (int) $dish['id'], 'name' => $dish['name'], 'price' => $price, 'qty' => $qty, 'note' => trim(mb_substr((string) ($item['note'] ?? ''), 0, 160))];
+        $lines[] = ['dish_id' => (int) $dish['id'], 'name' => $dish['name'], 'price' => $price, 'qty' => $qty, 'note' => trim(mb_substr((string) ($item['note'] ?? ''), 0, 160)), 'options' => mb_substr(implode(' · ', $chosen), 0, 255)];
     }
     if ($lines === []) {
         throw new InvalidArgumentException('Tu pedido está vacío.');
@@ -79,9 +94,9 @@ function priced_lines(PDO $pdo, array $items): array
 
 function insert_lines(PDO $pdo, int $orderId, int $round, array $lines): void
 {
-    $insert = $pdo->prepare('INSERT INTO order_items (order_id, round, dish_id, name, price, qty, note, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+    $insert = $pdo->prepare('INSERT INTO order_items (order_id, round, dish_id, name, price, qty, note, options, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
     foreach ($lines as $line) {
-        $insert->execute([$orderId, $round, $line['dish_id'], $line['name'], $line['price'], $line['qty'], $line['note'], now()]);
+        $insert->execute([$orderId, $round, $line['dish_id'], $line['name'], $line['price'], $line['qty'], $line['note'], $line['options'] ?? '', now()]);
     }
 }
 
@@ -190,7 +205,7 @@ function items_for(PDO $pdo, array $orderIds): array
     $statement->execute(array_values(array_map('intval', $orderIds)));
     $out = [];
     foreach ($statement->fetchAll() as $row) {
-        $out[(int) $row['order_id']][] = ['round' => (int) $row['round'], 'name' => $row['name'], 'qty' => (int) $row['qty'], 'price' => (float) $row['price'], 'note' => $row['note']];
+        $out[(int) $row['order_id']][] = ['round' => (int) $row['round'], 'name' => $row['name'], 'qty' => (int) $row['qty'], 'price' => (float) $row['price'], 'note' => $row['note'], 'opts' => (string) ($row['options'] ?? '')];
     }
     return $out;
 }

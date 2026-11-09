@@ -82,10 +82,15 @@
     $('[data-cart-count]').textContent = n;
     $('[data-cart-total]').textContent = money(subtotal());
   };
-  const addToCart = (dish, qty = 1, note = '') => {
-    const line = cart.find(i => i.id === dish.id && (i.note || '') === note);
+  /* Opciones elegidas: índices de dish.opts ([tipo, nombre, precio]). El precio por unidad suma los adicionales. */
+  const optsPrice = (dish, picked) => picked.reduce((n, k) => n + (dish.opts?.[k]?.[2] || 0), 0);
+  const optsText = (dish, picked) => picked.map(k => dish.opts[k]).filter(Boolean).map(o => (o[0] === 'extra' ? '+ ' : '') + o[1]).join(' · ');
+  const addToCart = (dish, qty = 1, note = '', picked = []) => {
+    picked = [...picked].sort((a, b) => a - b);
+    const key = picked.join(',');
+    const line = cart.find(i => i.id === dish.id && (i.note || '') === note && (i.opts || []).join(',') === key);
     if (line) line.qty = Math.min(50, line.qty + qty);
-    else cart.push({ id: dish.id, name: dish.name, price: dish.price, img: dish.img, art: dish.art, qty, note });
+    else cart.push({ id: dish.id, name: dish.name, price: Math.round((dish.price + optsPrice(dish, picked)) * 100) / 100, img: dish.img, art: dish.art, qty, note, opts: picked, optText: optsText(dish, picked) });
     save();
     bar.classList.remove('is-bump'); void bar.offsetWidth; bar.classList.add('is-bump');
   };
@@ -108,6 +113,8 @@
   $$('[data-add]').forEach(btn => btn.addEventListener('click', e => {
     e.stopPropagation();
     const dish = dishOf(btn);
+    // Si el plato tiene adicionales o «sin…», se abre su hoja para elegirlos.
+    if (dish.opts?.length) { openDish(dish); return; }
     fly(btn, dish.img);
     addToCart(dish);
     btn.classList.remove('is-done'); void btn.offsetWidth; btn.classList.add('is-done');
@@ -117,9 +124,18 @@
   /* Hoja del plato */
   const ds = $('#dish-sheet');
   let dsDish = null, dsQty = 1;
-  const dsRender = () => { $('output', $('[data-ds-qty]')).textContent = dsQty; $('[data-ds-price]').textContent = money(dsDish.price * dsQty); };
-  $$('[data-open]').forEach(btn => btn.addEventListener('click', () => {
-    dsDish = dishOf(btn); dsQty = 1;
+  const dsPicked = () => $$('[data-opt]:checked', ds).map(i => Number(i.value));
+  const dsRender = () => { $('output', $('[data-ds-qty]')).textContent = dsQty; $('[data-ds-price]').textContent = money((dsDish.price + optsPrice(dsDish, dsPicked())) * dsQty); };
+  const openDish = dish => {
+    dsDish = dish; dsQty = 1;
+    const opts = (dish.opts || []).map((o, k) => ({ type: o[0], name: o[1], price: o[2], k }));
+    $('[data-ds-opts]').hidden = !opts.length || !dish.ok;
+    ['sin', 'extra'].forEach(type => {
+      const group = $(`[data-ds-group="${type}"]`, ds);
+      const list = opts.filter(o => o.type === type);
+      group.hidden = !list.length;
+      $('.ds-choices', group).innerHTML = list.map(o => `<label class="ds-choice is-${type}"><input type="checkbox" data-opt value="${o.k}"><span class="ds-box" aria-hidden="true"></span><span class="ds-cname">${esc(o.name)}</span>${type === 'extra' ? `<b>${o.price > 0 ? '+' + money(o.price) : 'Gratis'}</b>` : ''}</label>`).join('');
+    });
     const img = $('[data-ds-img]');
     img.onerror = () => { img.onerror = null; img.src = dsDish.art; };
     img.src = dsDish.img; img.alt = dsDish.name;
@@ -130,12 +146,14 @@
     $('.ds-foot', ds).hidden = !dsDish.ok; $('[data-ds-note]').closest('label').hidden = !dsDish.ok; $('[data-ds-sold]').hidden = dsDish.ok;
     dsRender();
     openSheet(ds);
-  }));
+  };
+  $$('[data-open]').forEach(btn => btn.addEventListener('click', () => openDish(dishOf(btn))));
+  ds.addEventListener('change', e => { if (e.target.matches('[data-opt]')) dsRender(); });
   $$('[data-qty]', ds).forEach(b => b.addEventListener('click', () => { dsQty = Math.max(1, Math.min(50, dsQty + Number(b.dataset.qty))); dsRender(); }));
   $('[data-ds-add]').addEventListener('click', e => {
     const note = $('[data-ds-note]').value.trim().slice(0, 120);
     fly(e.currentTarget, dsDish.img);
-    addToCart(dsDish, dsQty, note);
+    addToCart(dsDish, dsQty, note, dsPicked());
     toast(dsQty + ' × ' + dsDish.name + ' agregado');
     closeSheet(ds);
   });
@@ -193,7 +211,7 @@
           <span class="qty qty-sm"><button type="button" data-line="${idx}" data-d="-1" aria-label="Quitar uno">−</button><output>${i.qty}</output><button type="button" data-line="${idx}" data-d="1" aria-label="Agregar uno">+</button></span>
           <small>${money(i.qty * i.price)}</small>
         </div>
-        <small>${money(i.price)} c/u</small>
+        <small>${i.optText ? `<span class="ci-opts">${esc(i.optText)}</span>` : ''}${money(i.price)} c/u</small>
         <input class="ci-note" data-note="${idx}" maxlength="120" placeholder="Indicación (opcional)" value="${esc(i.note || '')}" aria-label="Indicación para ${esc(i.name)}">
       </li>`).join('');
     $('[data-cart-empty]').hidden = cart.length > 0;
@@ -225,7 +243,7 @@
       table: fe('table').value, name: fe('name').value.trim(), phone: fe('phone').value.trim(),
       address: fe('address') ? fe('address').value.trim() : '', notes: fe('notes').value.trim(),
       payment: (($$('input[name=payment]', form).find(i => i.checked)) || {}).value || '',
-      items: cart.map(i => ({ id: i.id, qty: i.qty, note: i.note || '' })),
+      items: cart.map(i => ({ id: i.id, qty: i.qty, note: i.note || '', opts: i.opts || [] })),
     };
     if (!adding()) {
       let msg = '';

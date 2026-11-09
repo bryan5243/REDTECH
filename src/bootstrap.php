@@ -86,7 +86,60 @@ function db(): ?PDO
             run_install($pdo, true);
         }
     }
+    migrate_schema($pdo);
     return $pdo;
+}
+
+/** Versión del esquema. Al subirla, migrate_schema() agrega lo nuevo a las bases que ya existen. */
+const SCHEMA_VERSION = 2;
+
+/**
+ * Pone al día una base creada con una versión anterior (por ejemplo, agrega las columnas de
+ * adicionales). Es segura de repetir: si la columna ya existe, el error se ignora.
+ */
+function migrate_schema(PDO $pdo): void
+{
+    try {
+        $version = (int) $pdo->query("SELECT setting_value FROM settings WHERE setting_key = 'schema_version'")->fetchColumn();
+    } catch (PDOException) {
+        return; // Todavía no está instalada.
+    }
+    if ($version >= SCHEMA_VERSION) {
+        return;
+    }
+    $steps = [
+        2 => [
+            "ALTER TABLE dishes ADD COLUMN options VARCHAR(1000) NOT NULL DEFAULT ''",
+            "ALTER TABLE order_items ADD COLUMN options VARCHAR(255) NOT NULL DEFAULT ''",
+        ],
+    ];
+    foreach ($steps as $to => $statements) {
+        if ($version >= $to) {
+            continue;
+        }
+        foreach ($statements as $sql) {
+            try {
+                $pdo->exec($sql);
+            } catch (PDOException) {
+                // La columna ya existe (instalación nueva).
+            }
+        }
+        if ($to === 2) {
+            // Los platos de ejemplo reciben sus adicionales de ejemplo (solo si aún no tienen).
+            $seed = is_file(ROOT . '/config/demo.php') ? (require ROOT . '/config/demo.php') : [];
+            $fill = $pdo->prepare("UPDATE dishes SET options = ? WHERE name = ? AND options = ''");
+            foreach ($seed['dishes'] ?? [] as $dish) {
+                if (!empty($dish['options'])) {
+                    $fill->execute([implode("\n", $dish['options']), $dish['name']]);
+                }
+            }
+            $text = $pdo->prepare('UPDATE dishes SET description = ? WHERE description = ?');
+            $text->execute(['Pargo o corvina del día, con arroz, menestra, ensalada y patacones.', 'Pargo o corvina del día, con arroz, ensalada y patacones.']);
+            $text->execute(['Langostinos, pulpo, calamar, pescado y conchas a la brasa, con chimichurri y dos acompañantes.', 'Langostinos, pulpo, calamar, pescado y conchas asadas, con dos acompañantes.']);
+        }
+    }
+    $exists = $pdo->query("SELECT COUNT(*) FROM settings WHERE setting_key = 'schema_version'")->fetchColumn();
+    $pdo->prepare((int) $exists ? "UPDATE settings SET setting_value = ? WHERE setting_key = 'schema_version'" : "INSERT INTO settings (setting_value, setting_key) VALUES (?, 'schema_version')")->execute([(string) SCHEMA_VERSION]);
 }
 
 /** Id del último registro insertado (PostgreSQL necesita el nombre de la secuencia). */
@@ -280,6 +333,7 @@ function icon(string $name, string $class = 'icon'): string
         'facebook' => '<path d="M28 44V27h6l1-7h-7v-4c0-2 1-3 3-3h4V7a40 40 0 0 0-6-.5c-6 0-9 3.5-9 9.5v4h-6v7h6v17"/>',
         'tiktok' => '<path d="M28 6v24a7 7 0 1 1-7-7M28 6c1 5 5 9 11 9"/>',
         'mas' => '<path d="M24 10v28M10 24h28"/>',
+        'opciones' => '<path d="M6 14h22M36 14h6M6 34h6M20 34h22"/><circle cx="32" cy="14" r="4"/><circle cx="16" cy="34" r="4"/>',
         'menos' => '<path d="M10 24h28"/>',
         'cerrar' => '<path d="M12 12l24 24M36 12L12 36"/>',
         'check' => '<path d="M10 25l9 9 19-20"/>',
