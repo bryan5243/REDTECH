@@ -40,6 +40,7 @@ page_header(
         <div class="hero-actions hero-in" style="--d:5">
           <a class="btn btn-primary btn-lg" href="#contacto">Solicitar cotización <?= icon('flecha') ?></a>
           <a class="btn btn-glass btn-lg" href="<?= url('tienda.php') ?>"><?= icon('tienda') ?> Ver tienda</a>
+          <a class="btn btn-glass btn-lg btn-glass-ads" href="#publicidad"><?= icon('rotulo') ?> Publicidad</a>
         </div>
         <ul class="hero-chips hero-in" style="--d:6" aria-label="Lo que hacemos">
           <li><?= icon('cableado') ?> Cableado</li>
@@ -57,7 +58,7 @@ page_header(
         </div>
         <div class="hv-float hv-a"><span class="hv-icon"><?= icon('camaras') ?></span><div><b>Videovigilancia IP</b><small>Acceso desde tu celular</small></div></div>
         <div class="hv-float hv-b"><span class="hv-icon"><?= icon('cableado') ?></span><div><b>Red estructurada</b><small>Ordenada y documentada</small></div></div>
-        <div class="hv-float hv-c"><span class="hv-icon hv-icon-ok"><?= icon('check') ?></span><div><b>Instalación lista</b><small>Soporte posterior</small></div></div>
+        <div class="hv-float hv-c"><span class="hv-icon hv-icon-ads"><?= icon('rotulo') ?></span><div><b>Publicidad y rotulación</b><small>Haz que tu marca destaque</small></div></div>
       </div>
     </div>
     <a class="scroll-cue" href="#servicios" aria-label="Bajar a servicios"><span></span></a>
@@ -83,6 +84,39 @@ page_header(
       </dl>
     </section>
   <?php endif; ?>
+
+  <section id="publicidad" class="section ads" aria-labelledby="publicidad-titulo">
+    <div class="ads-glow" aria-hidden="true"></div>
+    <div class="wrap">
+      <header class="section-head reveal">
+        <p class="kicker kicker-ads"><?= e($ads['kicker']) ?></p>
+        <h2 id="publicidad-titulo"><?= e($ads['title']) ?></h2>
+        <p><?= e($ads['lead']) ?></p>
+      </header>
+      <div class="ads-grid">
+        <?php foreach ($ads['services'] as $i => $ad): ?>
+          <article class="ad-card reveal" style="--i:<?= $i ?>">
+            <span class="ad-icon"><?= icon($ad['icon']) ?></span>
+            <h3><?= e($ad['name']) ?></h3>
+            <p><?= e($ad['text']) ?></p>
+          </article>
+        <?php endforeach; ?>
+      </div>
+      <div class="ads-combo reveal">
+        <div class="ads-combo-icons" aria-hidden="true">
+          <span><?= icon('camaras') ?></span><span class="ads-plus"><?= icon('mas') ?></span><span class="ads-red"><?= icon('rotulo') ?></span>
+        </div>
+        <div>
+          <h3><?= e($ads['combo']['title']) ?></h3>
+          <p><?= e($ads['combo']['text']) ?></p>
+        </div>
+        <div class="ads-actions">
+          <a class="btn btn-ads" href="?interes=publicidad#contacto" data-pick="publicidad">Cotizar publicidad <?= icon('flecha') ?></a>
+          <?php if ($waAds !== ''): ?><a class="btn btn-whatsapp" href="<?= e($waAds) ?>" target="_blank" rel="noopener"><?= icon('whatsapp') ?> WhatsApp</a><?php endif; ?>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section id="servicios" class="section" aria-labelledby="servicios-titulo">
     <div class="wrap">
@@ -114,39 +148,6 @@ page_header(
             <div><h3><?= e($extra['name']) ?></h3><p><?= e($extra['text']) ?></p></div>
           </div>
         <?php endforeach; ?>
-      </div>
-    </div>
-  </section>
-
-  <section id="publicidad" class="section ads" aria-labelledby="publicidad-titulo">
-    <div class="ads-glow" aria-hidden="true"></div>
-    <div class="wrap">
-      <header class="section-head reveal">
-        <p class="kicker kicker-ads"><?= e($ads['kicker']) ?></p>
-        <h2 id="publicidad-titulo"><?= e($ads['title']) ?></h2>
-        <p><?= e($ads['lead']) ?></p>
-      </header>
-      <div class="ads-grid">
-        <?php foreach ($ads['services'] as $i => $ad): ?>
-          <article class="ad-card reveal" style="--i:<?= $i ?>">
-            <span class="ad-icon"><?= icon($ad['icon']) ?></span>
-            <h3><?= e($ad['name']) ?></h3>
-            <p><?= e($ad['text']) ?></p>
-          </article>
-        <?php endforeach; ?>
-      </div>
-      <div class="ads-combo reveal">
-        <div class="ads-combo-icons" aria-hidden="true">
-          <span><?= icon('camaras') ?></span><span class="ads-plus"><?= icon('mas') ?></span><span class="ads-red"><?= icon('rotulo') ?></span>
-        </div>
-        <div>
-          <h3><?= e($ads['combo']['title']) ?></h3>
-          <p><?= e($ads['combo']['text']) ?></p>
-        </div>
-        <div class="ads-actions">
-          <a class="btn btn-ads" href="?interes=publicidad#contacto" data-pick="publicidad">Cotizar publicidad <?= icon('flecha') ?></a>
-          <?php if ($waAds !== ''): ?><a class="btn btn-whatsapp" href="<?= e($waAds) ?>" target="_blank" rel="noopener"><?= icon('whatsapp') ?> WhatsApp</a><?php endif; ?>
-        </div>
       </div>
     </div>
   </section>

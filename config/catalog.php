@@ -14,6 +14,8 @@ $router = $img('photo-1606904825846-647eb07f5be2');
 $cameras = $img('photo-1589935447067-5531094415d1');
 $dome = $img('photo-1528312635006-8ea0bc49ec63');
 $homeCam = $img('photo-1549109926-58f039549485');
+// Ilustraciones locales para la línea de publicidad (reemplázalas por fotos de tus trabajos).
+$ad = static fn (string $name): string => 'assets/img/publicidad/' . $name . '.svg';
 
 return [
     'categories' => [
@@ -21,6 +23,7 @@ return [
         ['slug' => 'servidores', 'name' => 'Servidores y almacenamiento', 'description' => 'Servidores, NAS y racks para tu centro de datos.', 'image' => $servers],
         ['slug' => 'routers', 'name' => 'Routers y redes', 'description' => 'Routers, switches y puntos de acceso Wi-Fi.', 'image' => $router],
         ['slug' => 'camaras', 'name' => 'Cámaras y videovigilancia', 'description' => 'Cámaras IP, grabadores NVR y kits de seguridad.', 'image' => $cameras],
+        ['slug' => 'publicidad', 'name' => 'Publicidad e impresión', 'description' => 'Diseño gráfico, impresión, gigantografías, adhesivos y rótulos para tu negocio.', 'image' => $ad('gigantografia')],
     ],
     'products' => [
         [
@@ -106,6 +109,41 @@ return [
             'description' => "Incluye grabador NVR de 8 canales, 4 cámaras IP y disco para grabación continua.\nVe tus cámaras desde el celular.",
             'specs' => "Canales: 8\nCámaras incluidas: 4 de 4 MP\nDisco: 2 TB\nAcceso remoto: app móvil",
             'price' => 480.00, 'stock' => 'disponible', 'image' => $homeCam, 'gallery' => [$cameras, $dome], 'featured' => 1,
+        ],
+        [
+            'category' => 'publicidad', 'slug' => 'tarjetas-de-presentacion', 'name' => 'Tarjetas de presentación', 'brand' => 'RedTech Publicidad',
+            'summary' => 'Tarjetas impresas a full color con tu diseño o con el que te hacemos.',
+            'description' => "Tarjetas de presentación para tu negocio.\nSi no tienes diseño, te lo preparamos y te enviamos una prueba antes de imprimir.",
+            'specs' => "Impresión: full color\nLados: uno o dos\nCantidad: según pedido\nDiseño: opcional",
+            'price' => null, 'stock' => 'bajo_pedido', 'image' => $ad('tarjetas'), 'gallery' => [], 'featured' => 1,
+        ],
+        [
+            'category' => 'publicidad', 'slug' => 'gigantografia-lona', 'name' => 'Gigantografía en lona', 'brand' => 'RedTech Publicidad',
+            'summary' => 'Lonas publicitarias para fachadas, eventos y promociones.',
+            'description' => 'Impresión en gran formato en lona, lista para colgar o montar en estructura. Tú eliges la medida.',
+            'specs' => "Material: lona\nMedida: a tu gusto\nAcabado: con ojales o para estructura\nUso: interior y exterior",
+            'price' => null, 'stock' => 'bajo_pedido', 'image' => $ad('gigantografia'), 'gallery' => [], 'featured' => 1,
+        ],
+        [
+            'category' => 'publicidad', 'slug' => 'rotulo-letrero', 'name' => 'Rótulo o letrero para tu local', 'brand' => 'RedTech Publicidad',
+            'summary' => 'Letreros para fachadas y locales que hacen visible tu negocio.',
+            'description' => 'Diseñamos, fabricamos e instalamos el letrero de tu negocio. Coordinamos contigo la medida y el material.',
+            'specs' => "Tipo: según tu proyecto\nInstalación: incluida a coordinar\nDiseño: incluido",
+            'price' => null, 'stock' => 'bajo_pedido', 'image' => $ad('rotulo'), 'gallery' => [], 'featured' => 0,
+        ],
+        [
+            'category' => 'publicidad', 'slug' => 'adhesivos-vinilos', 'name' => 'Adhesivos y vinilos', 'brand' => 'RedTech Publicidad',
+            'summary' => 'Stickers, etiquetas y vinilos para productos, vitrinas y vehículos.',
+            'description' => 'Adhesivos impresos y cortados a la forma que necesites, para empaques, vitrinas o vehículos.',
+            'specs' => "Material: vinilo adhesivo\nCorte: a la forma\nUso: interior y exterior",
+            'price' => null, 'stock' => 'bajo_pedido', 'image' => $ad('vinilos'), 'gallery' => [], 'featured' => 0,
+        ],
+        [
+            'category' => 'publicidad', 'slug' => 'diseno-de-logo', 'name' => 'Diseño de logo e identidad', 'brand' => 'RedTech Publicidad',
+            'summary' => 'Creamos o renovamos el logo de tu marca, con sus colores y aplicaciones.',
+            'description' => "Diseño de logotipo con propuestas y ajustes.\nTe entregamos los archivos listos para imprimir y para redes sociales.",
+            'specs' => "Entrega: archivos para impresión y digitales\nIncluye: paleta de colores",
+            'price' => null, 'stock' => 'bajo_pedido', 'image' => $ad('diseno-logo'), 'gallery' => [], 'featured' => 0,
         ],
     ],
 ];

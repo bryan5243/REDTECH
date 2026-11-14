@@ -22,7 +22,7 @@ if (!isset($sorts[$sort])) {
 $list = products(['category' => $current, 'q' => $q, 'sort' => $sort]);
 $total = array_sum(array_map(static fn ($c) => (int) $c['product_count'], $categories));
 $heading = $current !== '' ? $categories[$current]['name'] : 'Tienda RedTech';
-$lead = $current !== '' ? $categories[$current]['description'] : 'Cables, servidores, routers y cámaras. Arma tu pedido y envíalo por WhatsApp.';
+$lead = $current !== '' ? $categories[$current]['description'] : 'Equipos de red, cámaras y servidores, y también publicidad: impresión, rótulos y diseño. Arma tu pedido y envíalo por WhatsApp.';
 
 $link = static function (array $changes) use ($current, $q, $sort): string {
     $params = array_filter(array_merge(['categoria' => $current, 'q' => $q, 'orden' => $sort === 'destacados' ? '' : $sort], $changes), static fn ($v) => $v !== '');
@@ -42,7 +42,7 @@ page_header($heading . ' | RedTech', $lead, 'tienda', 'page-shop');
         <?php if ($current !== ''): ?><input type="hidden" name="categoria" value="<?= e($current) ?>"><?php endif; ?>
         <?= icon('buscar') ?>
         <label class="sr-only" for="buscar">Buscar productos</label>
-        <input id="buscar" name="q" type="search" value="<?= e($q) ?>" placeholder="Buscar cable, cámara, router...">
+        <input id="buscar" name="q" type="search" value="<?= e($q) ?>" placeholder="Buscar cable, cámara, lona, tarjetas...">
         <button class="btn btn-primary" type="submit">Buscar</button>
       </form>
     </div>
@@ -70,6 +70,13 @@ page_header($heading . ' | RedTech', $lead, 'tienda', 'page-shop');
       </aside>
 
       <div class="shop-main">
+        <?php if ($current !== 'publicidad' && isset($categories['publicidad'])): ?>
+          <a class="shop-ads-banner" href="<?= e($link(['categoria' => 'publicidad', 'q' => ''])) ?>">
+            <span class="shop-ads-icon"><?= icon('rotulo') ?></span>
+            <span class="shop-ads-text"><b>¡Haz que tu marca destaque!</b><span>Diseño gráfico, impresión, gigantografías, adhesivos y rótulos.</span></span>
+            <span class="shop-ads-cta">Ver publicidad <?= icon('flecha') ?></span>
+          </a>
+        <?php endif; ?>
         <div class="shop-toolbar">
           <p><strong><?= count($list) ?></strong> <?= count($list) === 1 ? 'producto' : 'productos' ?><?= $q !== '' ? ' para «' . e($q) . '»' : '' ?></p>
           <form method="get" action="<?= url('tienda.php') ?>" data-autosubmit>

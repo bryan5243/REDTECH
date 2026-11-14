@@ -226,6 +226,7 @@ function icon(string $name, string $class = 'icon'): string
         'imprimir' => '<path d="M14 18V6h20v12"/><rect x="6" y="18" width="36" height="16" rx="3"/><path d="M14 28h20v14H14z"/>',
         'diseno' => '<path d="M24 5l12 18-12 20-12-20z"/><circle cx="24" cy="24" r="3"/><path d="M24 5v16"/>',
         'rotulo' => '<rect x="5" y="8" width="38" height="20" rx="3"/><path d="M12 15h24M12 21h14M14 28v14M34 28v14M9 42h30"/>',
+        'publicidad' => '<rect x="5" y="8" width="38" height="20" rx="3"/><path d="M12 15h24M12 21h14M14 28v14M34 28v14M9 42h30"/>',
         'elaboracion' => '<path d="M24 4l18 10v20L24 44 6 34V14z"/><path d="M6 14l18 10 18-10M24 24v20"/>',
         'reloj' => '<circle cx="24" cy="24" r="18"/><path d="M24 13v12l8 5"/>',
         'camion' => '<path d="M3 12h26v20H3zM29 19h9l7 7v6H29z"/><circle cx="12" cy="36" r="4"/><circle cx="37" cy="36" r="4"/>',
