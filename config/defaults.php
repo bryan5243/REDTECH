@@ -7,7 +7,7 @@ return [
     'settings' => [
         'location' => ['value' => 'Machala, El Oro, Ecuador', 'confirmed' => 0],
         // Vacíos: el enlace no aparece hasta que tengan un valor.
-        'facebook' => ['value' => '', 'confirmed' => 1],
+        'facebook' => ['value' => 'https://www.facebook.com/RedTechPublicidad/', 'confirmed' => 1],
         'instagram' => ['value' => '', 'confirmed' => 1],
         'map_url' => ['value' => '', 'confirmed' => 1],
         'tiktok' => ['value' => '', 'confirmed' => 1],
@@ -16,7 +16,7 @@ return [
         'map_embed' => ['value' => '', 'confirmed' => 1],
         // Número de WhatsApp para pedidos, solo dígitos con código de país (ej. 593991234567).
         // Vacío: el carrito avisa que falta configurarlo y el botón flotante no aparece.
-        'whatsapp' => ['value' => '', 'confirmed' => 1],
+        'whatsapp' => ['value' => '593968447384', 'confirmed' => 1],
         'schedule' => ['value' => 'Lunes a viernes, 08:00 a 18:00', 'confirmed' => 0],
         // 1 muestra en la tienda el aviso de que el catálogo es de ejemplo.
         'catalog_sample' => ['value' => '1', 'confirmed' => 1],
@@ -28,8 +28,8 @@ return [
         'color_dark' => ['value' => '', 'confirmed' => 1],
     ],
     'contacts' => [
-        ['type' => 'phone', 'label' => 'Teléfono', 'value' => '+593 99 000 0000', 'confirmed' => 0],
-        ['type' => 'email', 'label' => 'Correo', 'value' => 'contacto@redtech.com', 'confirmed' => 0],
+        ['type' => 'phone', 'label' => 'WhatsApp', 'value' => '+593 96 844 7384', 'confirmed' => 1],
+        ['type' => 'email', 'label' => 'Correo', 'value' => 'redtech24@hotmail.com', 'confirmed' => 1],
     ],
     // Imágenes editables: `url` admite una dirección completa o una ruta local como assets/img/foto.webp.
     // Ver CREDITS.md. Las fotos actuales son ilustrativas: no muestran trabajos ni productos de RedTech.

@@ -12,6 +12,7 @@ function quote_interests(): array
         'redes' => 'Redes y Wi-Fi',
         'soporte' => 'Soporte y mantenimiento',
         'tienda' => 'Compra de equipos',
+        'publicidad' => 'Publicidad: diseño, impresión o rotulación',
     ];
 }
 

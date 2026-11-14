@@ -7,6 +7,7 @@ function nav_links(): array
     return [
         'inicio' => [url('./'), 'Inicio'],
         'servicios' => [url('./#servicios'), 'Servicios'],
+        'publicidad' => [url('./#publicidad'), 'Publicidad'],
         'tienda' => [url('tienda.php'), 'Tienda'],
         'nosotros' => [url('./#nosotros'), 'Nosotros'],
         'contacto' => [url('./#contacto'), 'Contacto'],
@@ -39,7 +40,7 @@ function page_header(string $title, string $description, string $active = '', st
   <link rel="icon" href="<?= url('assets/img/favicon.svg') ?>" type="image/svg+xml">
   <link rel="icon" href="<?= url('assets/img/favicon-32.png') ?>" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="<?= url('assets/img/apple-touch-icon.png') ?>">
-  <link rel="stylesheet" href="<?= url('assets/site.css') ?>?v=7">
+  <link rel="stylesheet" href="<?= url('assets/site.css') ?>?v=8">
   <?= brand_style() ?>
   <script src="<?= url('assets/site.js') ?>?v=6" defer></script>
 </head>
@@ -84,7 +85,7 @@ function page_footer(): void
   <div class="wrap footer-grid">
     <div class="footer-brand">
       <a class="logo logo-light<?= $logoClass ?>" href="<?= url('./') ?>" aria-label="RedTech, inicio"><?= $logoHtml ?></a>
-      <p>Cableado estructurado, cámaras de seguridad, servidores y equipos de red para empresas y hogares.</p>
+      <p>Publicidad y tecnología: cableado estructurado, cámaras de seguridad, servidores, diseño gráfico, impresión y rotulación para empresas y hogares.</p>
       <?php if ($socials): ?>
         <div class="socials">
           <?php foreach ($socials as $key => $label): ?>

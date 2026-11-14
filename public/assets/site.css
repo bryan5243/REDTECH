@@ -681,3 +681,37 @@ html, body { overflow-x: clip; }
 .stock-note.is-low::before { animation: stock-pulse 1.6s ease-in-out infinite; }
 @keyframes stock-pulse { 50% { box-shadow: 0 0 0 6px transparent; } }
 @media (prefers-reduced-motion: reduce) { .stock-note.is-low::before { animation: none; } }
+
+/* Publicidad (RedTech Publicidad & Tecnología): acento rojo del logo */
+:root { --ads: #e3262f; --ads-600: #c21820; --ads-grad: linear-gradient(120deg, #e3262f 0%, #ff6a3d 100%); }
+.ads { position: relative; overflow: hidden; background: var(--tint); }
+.ads-glow { position: absolute; inset: -20% -10% auto auto; width: 60%; height: 80%; background: radial-gradient(closest-side, rgb(227 38 47 / .12), transparent); pointer-events: none; }
+.ads .wrap { position: relative; }
+.kicker-ads { color: var(--ads); }
+.kicker-ads::before { background: var(--ads-grad); }
+.ads-grid { display: grid; gap: 1rem; }
+.ad-card { position: relative; padding: 1.7rem 1.5rem 1.5rem; border-radius: var(--radius); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-sm); overflow: hidden; transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s; }
+.ad-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: var(--ads-grad); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease); }
+.ad-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: transparent; }
+.ad-card:hover::before { transform: scaleX(1); }
+.ad-icon { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: 1rem; border-radius: 15px; background: var(--ads-grad); color: #fff; box-shadow: 0 12px 24px -12px rgb(227 38 47 / .8); transition: transform .4s var(--ease); }
+.ad-icon .icon { width: 26px; height: 26px; }
+.ad-card:hover .ad-icon { transform: rotate(-8deg) scale(1.06); }
+.ad-card h3 { font-size: 1.12rem; margin-bottom: .35rem; }
+.ad-card p { margin: 0; font-size: .95rem; color: var(--muted); }
+.ads-combo { display: grid; gap: 1.2rem; align-items: center; margin-top: 1.5rem; padding: 1.6rem; border-radius: var(--radius); background: var(--navy-950); color: rgb(255 255 255 / .78); box-shadow: var(--shadow-lg); }
+.ads-combo h3 { color: #fff; font-size: 1.2rem; margin-bottom: .3rem; }
+.ads-combo p { margin: 0; }
+.ads-combo-icons { display: flex; align-items: center; gap: .5rem; }
+.ads-combo-icons span { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--grad); color: #fff; }
+.ads-combo-icons .ads-red { background: var(--ads-grad); }
+.ads-combo-icons .ads-plus { width: 24px; height: 24px; background: none; color: rgb(255 255 255 / .6); }
+.ads-combo-icons .icon { width: 24px; height: 24px; }
+.ads-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.btn-ads { background: var(--ads-grad); color: #fff; box-shadow: 0 8px 22px -8px rgb(227 38 47 / .7); }
+.btn-ads:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -10px rgb(227 38 47 / .8); }
+@media (min-width: 640px) { .ads-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) {
+  .ads-grid { grid-template-columns: repeat(4, 1fr); }
+  .ads-combo { grid-template-columns: auto 1fr auto; padding: 1.8rem 2rem; }
+}

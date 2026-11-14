@@ -3,6 +3,8 @@ $pending = '<span class="pending">por confirmar</span>';
 $images = $site['images'];
 $hero = $content['hero'];
 $waQuote = whatsapp_link('Hola RedTech, quiero una cotización.');
+$ads = $content['ads'];
+$waAds = whatsapp_link('Hola RedTech, quiero cotizar publicidad (diseño, impresión o rotulación).');
 
 $interestOptions = static function (string $selected) use ($interests): string {
     $html = '';
@@ -13,8 +15,8 @@ $interestOptions = static function (string $selected) use ($interests): string {
 };
 
 page_header(
-    'RedTech | Cableado estructurado, cámaras de seguridad y servidores',
-    'Cableado estructurado, cámaras de seguridad, servidores y tienda de equipos de red. Pide tu cotización o compra por WhatsApp.',
+    'RedTech Publicidad & Tecnología | Redes, cámaras, diseño e impresión en Machala',
+    'Cableado estructurado, cámaras de seguridad, servidores, diseño gráfico, impresión y rotulación. Pide tu cotización o compra por WhatsApp.',
     'inicio',
     'page-home'
 );
@@ -44,6 +46,7 @@ page_header(
           <li><?= icon('camaras') ?> Cámaras</li>
           <li><?= icon('servidores') ?> Servidores</li>
           <li><?= icon('wifi') ?> Redes Wi-Fi</li>
+          <li><?= icon('diseno') ?> Publicidad</li>
         </ul>
       </div>
 
@@ -111,6 +114,39 @@ page_header(
             <div><h3><?= e($extra['name']) ?></h3><p><?= e($extra['text']) ?></p></div>
           </div>
         <?php endforeach; ?>
+      </div>
+    </div>
+  </section>
+
+  <section id="publicidad" class="section ads" aria-labelledby="publicidad-titulo">
+    <div class="ads-glow" aria-hidden="true"></div>
+    <div class="wrap">
+      <header class="section-head reveal">
+        <p class="kicker kicker-ads"><?= e($ads['kicker']) ?></p>
+        <h2 id="publicidad-titulo"><?= e($ads['title']) ?></h2>
+        <p><?= e($ads['lead']) ?></p>
+      </header>
+      <div class="ads-grid">
+        <?php foreach ($ads['services'] as $i => $ad): ?>
+          <article class="ad-card reveal" style="--i:<?= $i ?>">
+            <span class="ad-icon"><?= icon($ad['icon']) ?></span>
+            <h3><?= e($ad['name']) ?></h3>
+            <p><?= e($ad['text']) ?></p>
+          </article>
+        <?php endforeach; ?>
+      </div>
+      <div class="ads-combo reveal">
+        <div class="ads-combo-icons" aria-hidden="true">
+          <span><?= icon('camaras') ?></span><span class="ads-plus"><?= icon('mas') ?></span><span class="ads-red"><?= icon('rotulo') ?></span>
+        </div>
+        <div>
+          <h3><?= e($ads['combo']['title']) ?></h3>
+          <p><?= e($ads['combo']['text']) ?></p>
+        </div>
+        <div class="ads-actions">
+          <a class="btn btn-ads" href="?interes=publicidad#contacto" data-pick="publicidad">Cotizar publicidad <?= icon('flecha') ?></a>
+          <?php if ($waAds !== ''): ?><a class="btn btn-whatsapp" href="<?= e($waAds) ?>" target="_blank" rel="noopener"><?= icon('whatsapp') ?> WhatsApp</a><?php endif; ?>
+        </div>
       </div>
     </div>
   </section>
