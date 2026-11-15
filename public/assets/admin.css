@@ -1,6 +1,6 @@
 @font-face { font-family: "Sora"; src: url("fonts/sora-latin.woff2") format("woff2"); font-weight: 400 800; font-display: swap; }
 @font-face { font-family: "Inter"; src: url("fonts/inter-latin.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
-:root { --ink: #0b1a30; --text: #33445c; --muted: #64748b; --line: #e3e9f2; --bg: #f3f6fb; --blue: #1764ff; --cyan: #19c6e8; --grad: linear-gradient(120deg, var(--blue), var(--cyan)); --red: #e5484d; --green: #12b76a; --amber: #f59e0b; }
+:root { --ink: #0b1a30; --text: #33445c; --muted: #64748b; --line: #e3e9f2; --bg: #f3f6fb; --blue: #e3262f; --cyan: #ff8a3d; --grad: linear-gradient(120deg, var(--blue), var(--cyan)); --red: #e5484d; --green: #12b76a; --amber: #f59e0b; }
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0; font: 400 .95rem/1.55 "Inter", system-ui, sans-serif; color: var(--text); background: var(--bg); }
 h1, h2 { font-family: "Sora", system-ui, sans-serif; color: var(--ink); letter-spacing: -.02em; margin: 0 0 .8rem; line-height: 1.2; }
@@ -47,7 +47,7 @@ code { background: #e9eef7; padding: .1em .35em; border-radius: 5px; font-size: 
 label { display: grid; gap: .3rem; margin-bottom: .9rem; font-weight: 600; color: var(--ink); font-size: .88rem; }
 label small { font-weight: 400; color: var(--muted); }
 input:not([type=checkbox]):not([type=file]), select, textarea { width: 100%; padding: .62rem .8rem; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; font: 400 .95rem "Inter", sans-serif; color: var(--ink); }
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgb(23 100 255 / .14); }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgb(227 38 47 / .14); }
 input[type=file] { font-size: .85rem; }
 input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--blue); }
 .a-check { display: flex; align-items: center; gap: .5rem; font-weight: 500; }

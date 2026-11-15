@@ -3,8 +3,6 @@ $pending = '<span class="pending">por confirmar</span>';
 $images = $site['images'];
 $hero = $content['hero'];
 $waQuote = whatsapp_link('Hola RedTech, quiero una cotización.');
-$ads = $content['ads'];
-$waAds = whatsapp_link('Hola RedTech, quiero cotizar publicidad (diseño, impresión o rotulación).');
 
 $interestOptions = static function (string $selected) use ($interests): string {
     $html = '';
@@ -15,8 +13,8 @@ $interestOptions = static function (string $selected) use ($interests): string {
 };
 
 page_header(
-    'RedTech Publicidad & Tecnología | Redes, cámaras, diseño e impresión en Machala',
-    'Cableado estructurado, cámaras de seguridad, servidores, diseño gráfico, impresión y rotulación. Pide tu cotización o compra por WhatsApp.',
+    'RedTech Publicidad | Diseño gráfico, impresión y rotulación en Machala',
+    'Diseño gráfico, gigantografías, adhesivos, tarjetas, letreros y rotulación. Pide tu cotización o compra por WhatsApp.',
     'inicio',
     'page-home'
 );
@@ -24,7 +22,7 @@ page_header(
 <main id="principal" tabindex="-1">
   <section class="hero" aria-labelledby="titulo">
     <div class="hero-bg" aria-hidden="true">
-      <?= picture($images['hero'], '100vw', 1900, 1100, true, 'hero-photo', 0.25) ?>
+      <?= picture($images['portada'], '100vw', 1900, 1100, true, 'hero-photo', 0.25) ?>
       <canvas class="hero-net" data-network></canvas>
       <div class="hero-grid-lines"></div>
     </div>
@@ -40,25 +38,23 @@ page_header(
         <div class="hero-actions hero-in" style="--d:5">
           <a class="btn btn-primary btn-lg" href="#contacto">Solicitar cotización <?= icon('flecha') ?></a>
           <a class="btn btn-glass btn-lg" href="<?= url('tienda.php') ?>"><?= icon('tienda') ?> Ver tienda</a>
-          <a class="btn btn-glass btn-lg btn-glass-ads" href="#publicidad"><?= icon('rotulo') ?> Publicidad</a>
         </div>
         <ul class="hero-chips hero-in" style="--d:6" aria-label="Lo que hacemos">
-          <li><?= icon('cableado') ?> Cableado</li>
-          <li><?= icon('camaras') ?> Cámaras</li>
-          <li><?= icon('servidores') ?> Servidores</li>
-          <li><?= icon('wifi') ?> Redes Wi-Fi</li>
-          <li><?= icon('diseno') ?> Publicidad</li>
+          <li><?= icon('diseno') ?> Diseño</li>
+          <li><?= icon('imprimir') ?> Impresión</li>
+          <li><?= icon('rotulo') ?> Rotulación</li>
+          <li><?= icon('elaboracion') ?> Material POP</li>
         </ul>
       </div>
 
       <div class="hero-visual hero-in" style="--d:3" aria-hidden="true">
         <div class="hv-card hv-main" data-tilt>
-          <?= picture($images['servidores'], '(min-width: 1000px) 460px, 0px', 920, 1100) ?>
+          <?= picture($images['portada_tarjeta'], '(min-width: 1000px) 460px, 0px', 920, 1100) ?>
           <div class="hv-scan"></div>
         </div>
-        <div class="hv-float hv-a"><span class="hv-icon"><?= icon('camaras') ?></span><div><b>Videovigilancia IP</b><small>Acceso desde tu celular</small></div></div>
-        <div class="hv-float hv-b"><span class="hv-icon"><?= icon('cableado') ?></span><div><b>Red estructurada</b><small>Ordenada y documentada</small></div></div>
-        <div class="hv-float hv-c"><span class="hv-icon hv-icon-ads"><?= icon('rotulo') ?></span><div><b>Publicidad y rotulación</b><small>Haz que tu marca destaque</small></div></div>
+        <div class="hv-float hv-a"><span class="hv-icon"><?= icon('diseno') ?></span><div><b>Diseño gráfico</b><small>Logos y artes para redes</small></div></div>
+        <div class="hv-float hv-b"><span class="hv-icon"><?= icon('imprimir') ?></span><div><b>Gran formato</b><small>Lonas, vinilos y adhesivos</small></div></div>
+        <div class="hv-float hv-c"><span class="hv-icon hv-icon-ads"><?= icon('rotulo') ?></span><div><b>Publicidad y rotulación</b><small>Letreros, vitrinas y vehículos</small></div></div>
       </div>
     </div>
     <a class="scroll-cue" href="#servicios" aria-label="Bajar a servicios"><span></span></a>
@@ -85,45 +81,12 @@ page_header(
     </section>
   <?php endif; ?>
 
-  <section id="publicidad" class="section ads" aria-labelledby="publicidad-titulo">
-    <div class="ads-glow" aria-hidden="true"></div>
-    <div class="wrap">
-      <header class="section-head reveal">
-        <p class="kicker kicker-ads"><?= e($ads['kicker']) ?></p>
-        <h2 id="publicidad-titulo"><?= e($ads['title']) ?></h2>
-        <p><?= e($ads['lead']) ?></p>
-      </header>
-      <div class="ads-grid">
-        <?php foreach ($ads['services'] as $i => $ad): ?>
-          <article class="ad-card reveal" style="--i:<?= $i ?>">
-            <span class="ad-icon"><?= icon($ad['icon']) ?></span>
-            <h3><?= e($ad['name']) ?></h3>
-            <p><?= e($ad['text']) ?></p>
-          </article>
-        <?php endforeach; ?>
-      </div>
-      <div class="ads-combo reveal">
-        <div class="ads-combo-icons" aria-hidden="true">
-          <span><?= icon('camaras') ?></span><span class="ads-plus"><?= icon('mas') ?></span><span class="ads-red"><?= icon('rotulo') ?></span>
-        </div>
-        <div>
-          <h3><?= e($ads['combo']['title']) ?></h3>
-          <p><?= e($ads['combo']['text']) ?></p>
-        </div>
-        <div class="ads-actions">
-          <a class="btn btn-ads" href="?interes=publicidad#contacto" data-pick="publicidad">Cotizar publicidad <?= icon('flecha') ?></a>
-          <?php if ($waAds !== ''): ?><a class="btn btn-whatsapp" href="<?= e($waAds) ?>" target="_blank" rel="noopener"><?= icon('whatsapp') ?> WhatsApp</a><?php endif; ?>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section id="servicios" class="section" aria-labelledby="servicios-titulo">
     <div class="wrap">
       <header class="section-head reveal">
         <p class="kicker">Servicios</p>
-        <h2 id="servicios-titulo">Soluciones completas para tu infraestructura</h2>
-        <p>Desde el primer cable hasta el servidor: diseñamos, instalamos y damos soporte.</p>
+        <h2 id="servicios-titulo">¡Haz que tu marca destaque!</h2>
+        <p>Diseñamos, imprimimos y rotulamos todo lo que tu negocio necesita para que lo vean, lo recuerden y lo elijan.</p>
       </header>
       <div class="services">
         <?php $i = 0; foreach ($content['services'] as $key => $service): ?>
@@ -157,7 +120,7 @@ page_header(
       <header class="section-head section-head-row reveal">
         <div>
           <p class="kicker kicker-light">Tienda en línea</p>
-          <h2 id="tienda-titulo">Equipos destacados</h2>
+          <h2 id="tienda-titulo">Productos destacados</h2>
           <p>Agrega al carrito y envía tu pedido por WhatsApp en un clic.</p>
         </div>
         <div class="carousel-nav">
@@ -182,14 +145,14 @@ page_header(
   <section id="nosotros" class="section" aria-labelledby="nosotros-titulo">
     <div class="wrap split">
       <div class="split-media reveal reveal-left">
-        <?= picture($images['nosotros'], '(min-width: 1000px) 560px, 100vw', 1000, 1100, false, 'px-img', 0.06) ?>
-        <div class="split-badge"><?= icon('escudo') ?><span>Trabajo ordenado, documentado y con soporte</span></div>
+        <?= picture($images['equipo'], '(min-width: 1000px) 560px, 100vw', 1000, 1100, false, 'px-img', 0.06) ?>
+        <div class="split-badge"><?= icon('escudo') ?><span>Prueba de diseño antes de producir</span></div>
       </div>
       <div>
         <header class="section-head section-head-left reveal">
           <p class="kicker">Por qué RedTech</p>
-          <h2 id="nosotros-titulo">Tecnología bien instalada, desde el primer día</h2>
-          <p>Somos tu aliado técnico para conectar, proteger y hacer crecer tu operación.</p>
+          <h2 id="nosotros-titulo">Publicidad bien hecha, de la idea a la calle</h2>
+          <p>Somos tu aliado para que tu negocio se vea profesional en tu local, en la calle y en redes.</p>
         </header>
         <ul class="reasons">
           <?php foreach ($content['reasons'] as $i => $reason): ?>
@@ -225,7 +188,7 @@ page_header(
     <div class="wrap">
       <header class="section-head reveal">
         <p class="kicker">Sectores</p>
-        <h2 id="sectores-titulo">Soluciones para cada tipo de espacio</h2>
+        <h2 id="sectores-titulo">Publicidad para cada tipo de negocio</h2>
       </header>
       <div class="sectors">
         <?php foreach ($content['sectors'] as $i => $sector): ?>
@@ -241,8 +204,8 @@ page_header(
   <section class="cta-band" aria-labelledby="cta-titulo">
     <div class="wrap cta-inner reveal">
       <div>
-        <h2 id="cta-titulo">¿Listo para modernizar tu red?</h2>
-        <p>Cuéntanos tu proyecto y te enviamos una propuesta sin compromiso.</p>
+        <h2 id="cta-titulo">¿Listo para que tu marca destaque?</h2>
+        <p>Cuéntanos tu idea y te enviamos una propuesta sin compromiso.</p>
       </div>
       <div class="cta-actions">
         <a class="btn btn-light btn-lg" href="#contacto">Solicitar cotización</a>
@@ -336,7 +299,7 @@ page_header(
           </div>
           <div class="field field-wide<?= isset($errors['message']) ? ' has-error' : '' ?>">
             <label for="f-message">Mensaje (opcional)</label>
-            <textarea id="f-message" name="message" rows="4" placeholder="Cuéntanos brevemente tu proyecto"><?= e($old['message'] ?? '') ?></textarea>
+            <textarea id="f-message" name="message" rows="4" placeholder="Qué necesitas, medidas, cantidad y fecha"><?= e($old['message'] ?? '') ?></textarea>
             <?php if (isset($errors['message'])): ?><p class="error" id="e-message"><?= e($errors['message']) ?></p><?php endif; ?>
           </div>
           <button class="btn btn-primary btn-lg btn-block" type="submit">Enviar solicitud <?= icon('flecha') ?></button>

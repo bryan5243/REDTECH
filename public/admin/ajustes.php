@@ -18,7 +18,7 @@ $settingFields = [
     'instagram' => ['Instagram', 'https://instagram.com/...', false],
     'tiktok' => ['TikTok', 'https://tiktok.com/@...', false],
 ];
-$imageLabels = ['hero' => 'Portada (fondo)', 'servidores' => 'Servicio: servidores y portada', 'cableado' => 'Servicio: cableado', 'camaras' => 'Servicio: cámaras', 'nosotros' => 'Sección "Por qué RedTech"', 'empresas' => 'Sector: oficinas', 'hogares' => 'Sector: hogares'];
+$imageLabels = ['portada' => 'Portada (fondo)', 'portada_tarjeta' => 'Portada (imagen grande)', 'diseno' => 'Servicio: diseño gráfico', 'impresion' => 'Servicio: impresión', 'rotulacion' => 'Servicio: rotulación', 'equipo' => 'Sección "Por qué RedTech"', 'sector_comercios' => 'Sector: comercios', 'sector_eventos' => 'Sector: eventos', 'sector_emprendedores' => 'Sector: emprendedores', 'sector_empresas' => 'Sector: empresas'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     check_post();

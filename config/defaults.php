@@ -33,22 +33,23 @@ return [
     ],
     // Imágenes editables: `url` admite una dirección completa o una ruta local como assets/img/foto.webp.
     // Ver CREDITS.md. Las fotos actuales son ilustrativas: no muestran trabajos ni productos de RedTech.
+    // Imágenes editables: `url` admite una dirección completa o una ruta local como assets/img/foto.webp.
+    // Las actuales son ilustraciones de ejemplo: reemplázalas por fotos de tus trabajos desde el panel.
     'images' => [
-        'hero' => ['url' => 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31', 'alt' => 'Rack de red con cables de colores conectados'],
-        'cableado' => ['url' => 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8', 'alt' => 'Panel de conexiones con cables de red azules'],
-        'camaras' => ['url' => 'https://images.unsplash.com/photo-1528312635006-8ea0bc49ec63', 'alt' => 'Cámara de seguridad tipo domo en un poste'],
-        'servidores' => ['url' => 'https://images.unsplash.com/photo-1695668548342-c0c1ad479aee', 'alt' => 'Rack de servidores en una sala técnica'],
-        'nosotros' => ['url' => 'https://images.unsplash.com/photo-1785682117394-4c8d27afc12a', 'alt' => 'Técnico revisando un rack con un equipo de medición'],
-        'empresas' => ['url' => 'https://images.unsplash.com/photo-1584169417032-d34e8d805e8b', 'alt' => 'Pasillo de una sala técnica con racks de equipos'],
-        'hogares' => ['url' => 'https://images.unsplash.com/photo-1549109926-58f039549485', 'alt' => 'Cámara de seguridad doméstica en una pared'],
-        'producto_cables' => ['url' => 'https://images.unsplash.com/photo-1683322499436-f4383dd59f5a', 'alt' => 'Cables de red azules conectados a un equipo'],
-        'producto_servidores' => ['url' => 'https://images.unsplash.com/photo-1698668975271-2ba9a323be6b', 'alt' => 'Equipos de red en rack con cables conectados'],
-        'producto_routers' => ['url' => 'https://images.unsplash.com/photo-1606904825846-647eb07f5be2', 'alt' => 'Router blanco con dos antenas'],
-        'producto_camaras' => ['url' => 'https://images.unsplash.com/photo-1589935447067-5531094415d1', 'alt' => 'Dos cámaras de seguridad en un poste'],
+        'portada' => ['url' => 'assets/img/publicidad/fondo.svg', 'alt' => 'Fondo con formas de color de la marca'],
+        'portada_tarjeta' => ['url' => 'assets/img/publicidad/portada.svg', 'alt' => 'Letrero, volante, tarjeta y adhesivos de una marca'],
+        'diseno' => ['url' => 'assets/img/publicidad/diseno-logo.svg', 'alt' => 'Logo en diseño en la pantalla'],
+        'impresion' => ['url' => 'assets/img/publicidad/gigantografia.svg', 'alt' => 'Gigantografía impresa en lona'],
+        'rotulacion' => ['url' => 'assets/img/publicidad/rotulo.svg', 'alt' => 'Letrero rotulado en la fachada de un local'],
+        'equipo' => ['url' => 'assets/img/publicidad/vinilos.svg', 'alt' => 'Adhesivos y vinilos impresos'],
+        'sector_comercios' => ['url' => 'assets/img/publicidad/rotulo.svg', 'alt' => 'Fachada de comercio con letrero'],
+        'sector_eventos' => ['url' => 'assets/img/publicidad/gigantografia.svg', 'alt' => 'Lona para inauguración'],
+        'sector_emprendedores' => ['url' => 'assets/img/publicidad/tarjetas.svg', 'alt' => 'Tarjetas de presentación'],
+        'sector_empresas' => ['url' => 'assets/img/publicidad/diseno-logo.svg', 'alt' => 'Diseño de identidad de marca'],
     ],
     'stats' => [
-        ['value' => '+150', 'label' => 'proyectos instalados', 'confirmed' => 0],
-        ['value' => '24/7', 'label' => 'soporte técnico', 'confirmed' => 0],
-        ['value' => '100%', 'label' => 'equipos certificados', 'confirmed' => 0],
+        ['value' => '2 mil', 'label' => 'seguidores en Facebook', 'confirmed' => 1],
+        ['value' => '100%', 'label' => 'nos recomiendan en Facebook', 'confirmed' => 1],
+        ['value' => '+9', 'label' => 'años de trabajo', 'confirmed' => 0],
     ],
 ];

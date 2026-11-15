@@ -21,8 +21,8 @@ if (!isset($sorts[$sort])) {
 }
 $list = products(['category' => $current, 'q' => $q, 'sort' => $sort]);
 $total = array_sum(array_map(static fn ($c) => (int) $c['product_count'], $categories));
-$heading = $current !== '' ? $categories[$current]['name'] : 'Tienda RedTech';
-$lead = $current !== '' ? $categories[$current]['description'] : 'Equipos de red, cámaras y servidores, y también publicidad: impresión, rótulos y diseño. Arma tu pedido y envíalo por WhatsApp.';
+$heading = $current !== '' ? $categories[$current]['name'] : 'Tienda RedTech Publicidad';
+$lead = $current !== '' ? $categories[$current]['description'] : 'Impresión, rótulos y diseño para tu negocio. Arma tu pedido y envíalo por WhatsApp.';
 
 $link = static function (array $changes) use ($current, $q, $sort): string {
     $params = array_filter(array_merge(['categoria' => $current, 'q' => $q, 'orden' => $sort === 'destacados' ? '' : $sort], $changes), static fn ($v) => $v !== '');
@@ -42,7 +42,7 @@ page_header($heading . ' | RedTech', $lead, 'tienda', 'page-shop');
         <?php if ($current !== ''): ?><input type="hidden" name="categoria" value="<?= e($current) ?>"><?php endif; ?>
         <?= icon('buscar') ?>
         <label class="sr-only" for="buscar">Buscar productos</label>
-        <input id="buscar" name="q" type="search" value="<?= e($q) ?>" placeholder="Buscar cable, cámara, lona, tarjetas...">
+        <input id="buscar" name="q" type="search" value="<?= e($q) ?>" placeholder="Buscar lona, tarjetas, letrero...">
         <button class="btn btn-primary" type="submit">Buscar</button>
       </form>
     </div>
@@ -64,19 +64,12 @@ page_header($heading . ' | RedTech', $lead, 'tienda', 'page-shop');
         </ul>
         <div class="filters-help">
           <?= icon('whatsapp') ?>
-          <p><strong>¿Necesitas asesoría?</strong> Te ayudamos a elegir el equipo correcto.</p>
-          <?php $help = whatsapp_link('Hola RedTech, necesito asesoría para elegir un equipo.'); if ($help !== ''): ?><a class="link-arrow" href="<?= e($help) ?>" target="_blank" rel="noopener">Escríbenos <?= icon('flecha') ?></a><?php else: ?><a class="link-arrow" href="<?= url('./#contacto') ?>">Contáctanos <?= icon('flecha') ?></a><?php endif; ?>
+          <p><strong>¿Necesitas asesoría?</strong> Te ayudamos a elegir el material y el tamaño.</p>
+          <?php $help = whatsapp_link('Hola RedTech, necesito asesoría para un trabajo de publicidad.'); if ($help !== ''): ?><a class="link-arrow" href="<?= e($help) ?>" target="_blank" rel="noopener">Escríbenos <?= icon('flecha') ?></a><?php else: ?><a class="link-arrow" href="<?= url('./#contacto') ?>">Contáctanos <?= icon('flecha') ?></a><?php endif; ?>
         </div>
       </aside>
 
       <div class="shop-main">
-        <?php if ($current !== 'publicidad' && isset($categories['publicidad'])): ?>
-          <a class="shop-ads-banner" href="<?= e($link(['categoria' => 'publicidad', 'q' => ''])) ?>">
-            <span class="shop-ads-icon"><?= icon('rotulo') ?></span>
-            <span class="shop-ads-text"><b>¡Haz que tu marca destaque!</b><span>Diseño gráfico, impresión, gigantografías, adhesivos y rótulos.</span></span>
-            <span class="shop-ads-cta">Ver publicidad <?= icon('flecha') ?></span>
-          </a>
-        <?php endif; ?>
         <div class="shop-toolbar">
           <p><strong><?= count($list) ?></strong> <?= count($list) === 1 ? 'producto' : 'productos' ?><?= $q !== '' ? ' para «' . e($q) . '»' : '' ?></p>
           <form method="get" action="<?= url('tienda.php') ?>" data-autosubmit>
@@ -94,7 +87,7 @@ page_header($heading . ' | RedTech', $lead, 'tienda', 'page-shop');
           <div class="empty-state">
             <?= icon('buscar', 'icon empty-icon') ?>
             <h2>No encontramos productos</h2>
-            <p>Prueba con otra búsqueda o escríbenos: conseguimos el equipo que necesitas.</p>
+            <p>Prueba con otra búsqueda o escríbenos: cotizamos el trabajo que necesitas.</p>
             <a class="btn btn-primary" href="<?= url('tienda.php') ?>">Ver todos los productos</a>
           </div>
         <?php else: ?>
@@ -109,9 +102,9 @@ page_header($heading . ' | RedTech', $lead, 'tienda', 'page-shop');
   <section class="perks" aria-label="Ventajas de comprar en RedTech">
     <div class="wrap perks-grid">
       <div class="perk reveal"><?= icon('whatsapp') ?><div><h3>Pedido por WhatsApp</h3><p>Envía tu carrito y coordinamos contigo.</p></div></div>
-      <div class="perk reveal" style="--i:1"><?= icon('soporte') ?><div><h3>Instalación opcional</h3><p>Te lo dejamos funcionando.</p></div></div>
+      <div class="perk reveal" style="--i:1"><?= icon('soporte') ?><div><h3>Instalación opcional</h3><p>Instalamos letreros, lonas y vinilos.</p></div></div>
       <div class="perk reveal" style="--i:2"><?= icon('camion') ?><div><h3>Entrega coordinada</h3><p>Acordamos la entrega contigo.</p></div></div>
-      <div class="perk reveal" style="--i:3"><?= icon('escudo') ?><div><h3>Asesoría técnica</h3><p>Te ayudamos a elegir bien.</p></div></div>
+      <div class="perk reveal" style="--i:3"><?= icon('escudo') ?><div><h3>Prueba de diseño</h3><p>Apruebas antes de imprimir.</p></div></div>
     </div>
   </section>
 </main>

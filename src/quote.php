@@ -6,13 +6,12 @@ declare(strict_types=1);
 function quote_interests(): array
 {
     return [
-        'cableado' => 'Cableado estructurado',
-        'camaras' => 'Cámaras de seguridad',
-        'servidores' => 'Servidores',
-        'redes' => 'Redes y Wi-Fi',
-        'soporte' => 'Soporte y mantenimiento',
-        'tienda' => 'Compra de equipos',
-        'publicidad' => 'Publicidad: diseño, impresión o rotulación',
+        'diseno' => 'Diseño gráfico',
+        'impresion' => 'Impresión',
+        'rotulacion' => 'Rotulación y letreros',
+        'elaboracion' => 'Material publicitario',
+        'instalacion' => 'Instalación',
+        'tienda' => 'Compra en la tienda',
     ];
 }
 

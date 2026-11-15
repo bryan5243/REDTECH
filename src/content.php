@@ -1,80 +1,63 @@
 <?php
-// Textos del sitio. Son una propuesta inicial: revísalos y ajústalos a tu empresa.
+// Textos del sitio de RedTech Publicidad. Son una propuesta inicial: revísalos y ajústalos.
+// La página de Facebook describe el negocio como "Diseño Gráfico, Creación, Elaboración,
+// Impresión y Rotulación"; los detalles de cada servicio son una propuesta por confirmar.
 // Los datos de contacto, cifras, fotos y productos se editan desde /admin.
 
 return [
     'hero' => [
-        'eyebrow' => 'Publicidad & Tecnología',
-        'title_before' => 'Soluciones en',
-        'rotating' => ['redes', 'seguridad', 'publicidad', 'diseño'],
-        'title_after' => 'para tu negocio',
-        'lead' => 'Instalamos cableado estructurado, cámaras de seguridad y servidores, y hacemos que tu marca destaque con diseño gráfico, impresión y rotulación. Todo con un mismo equipo.',
+        'eyebrow' => 'Publicidad & diseño',
+        'title_before' => 'Haz que tu marca',
+        'rotating' => ['destaque', 'se vea', 'venda', 'crezca'],
+        'title_after' => 'con publicidad que se nota',
+        'lead' => 'Diseño gráfico, impresión, rotulación y material publicitario para tu negocio. Nosotros lo diseñamos, lo producimos y lo instalamos.',
     ],
-    'marquee' => ['Cableado Cat6 y Cat6A', 'Fibra óptica', 'Cámaras IP', 'Grabadores NVR', 'Servidores', 'Almacenamiento NAS', 'Routers', 'Switches PoE', 'Wi-Fi profesional', 'Diseño gráfico', 'Gigantografías', 'Rotulación', 'Letreros', 'Soporte técnico'],
+    'marquee' => ['Diseño gráfico', 'Logos', 'Gigantografías', 'Lonas', 'Vinilos', 'Adhesivos', 'Tarjetas', 'Volantes', 'Rotulación', 'Letreros', 'Vehículos rotulados', 'Material POP', 'Señalética'],
     'services' => [
-        'cableado' => [
-            'name' => 'Cableado estructurado',
-            'detail' => 'Redes de datos ordenadas, etiquetadas y documentadas, listas para crecer con tu operación.',
-            'items' => ['Cableado Cat6, Cat6A y fibra óptica', 'Racks, patch panels y organización', 'Certificación y etiquetado de puntos'],
+        'diseno' => [
+            'name' => 'Diseño gráfico',
+            'detail' => 'Creamos la imagen de tu marca y las piezas para que tus clientes te reconozcan.',
+            'items' => ['Logos e identidad de marca', 'Artes para redes sociales', 'Diseño de piezas impresas'],
         ],
-        'camaras' => [
-            'name' => 'Cámaras de seguridad',
-            'detail' => 'Videovigilancia IP con grabación continua y acceso desde tu celular, donde estés.',
-            'items' => ['Cámaras IP interiores y exteriores', 'Grabadores NVR y almacenamiento', 'Monitoreo remoto desde la app'],
+        'impresion' => [
+            'name' => 'Impresión',
+            'detail' => 'Imprimimos en pequeño y gran formato con colores fieles a tu diseño.',
+            'items' => ['Gigantografías y lonas', 'Vinilos y adhesivos', 'Tarjetas, volantes y papelería'],
         ],
-        'servidores' => [
-            'name' => 'Servidores',
-            'detail' => 'Servidores y almacenamiento para tus aplicaciones, archivos y copias de seguridad.',
-            'items' => ['Instalación y configuración', 'Almacenamiento NAS y respaldos', 'Virtualización y mantenimiento'],
-        ],
-    ],
-    // Línea de publicidad (RedTech Publicidad & Tecnología). Los detalles de cada servicio son
-    // una propuesta: la página de Facebook solo dice "Diseño Gráfico, Creación, Elaboración,
-    // Impresión y Rotulación". Confírmalos o ajústalos.
-    'ads' => [
-        'kicker' => 'Publicidad & diseño',
-        'title' => '¡Haz que tu marca destaque!',
-        'lead' => 'Diseñamos, imprimimos y rotulamos todo lo que tu negocio necesita para que lo vean, lo recuerden y lo elijan.',
-        'services' => [
-            ['icon' => 'diseno', 'name' => 'Diseño gráfico', 'text' => 'Logos, identidad de marca, artes para redes sociales y piezas para tus campañas.'],
-            ['icon' => 'imprimir', 'name' => 'Impresión', 'text' => 'Gigantografías, lonas, vinilos, adhesivos, tarjetas, volantes y más.'],
-            ['icon' => 'rotulo', 'name' => 'Rotulación', 'text' => 'Letreros, fachadas, vitrinas y vehículos rotulados con tu marca.'],
-            ['icon' => 'elaboracion', 'name' => 'Creación y elaboración', 'text' => 'Material publicitario, señalética y exhibidores hechos a la medida.'],
-        ],
-        'combo' => [
-            'title' => 'Tecnología y publicidad en un solo lugar',
-            'text' => '¿Abres un local u oficina? Te instalamos la red, las cámaras y el Wi-Fi, y también el letrero, la rotulación y el material para tu inauguración.',
+        'rotulacion' => [
+            'name' => 'Rotulación',
+            'detail' => 'Llevamos tu marca a la calle: fachadas, vitrinas y vehículos.',
+            'items' => ['Letreros para locales', 'Rotulación de vitrinas', 'Vehículos rotulados'],
         ],
     ],
     'extras' => [
-        ['icon' => 'wifi', 'name' => 'Redes y Wi-Fi', 'text' => 'Cobertura inalámbrica estable en toda tu instalación, con puntos de acceso profesionales.'],
-        ['icon' => 'soporte', 'name' => 'Soporte y mantenimiento', 'text' => 'Revisiones preventivas y atención cuando algo falla, para que tu red no se detenga.'],
-        ['icon' => 'tienda', 'name' => 'Venta de equipos', 'text' => 'Cables, servidores, routers y cámaras con asesoría para elegir lo que de verdad necesitas.'],
+        ['icon' => 'elaboracion', 'name' => 'Creación y elaboración', 'text' => 'Material publicitario, exhibidores y señalética hechos a la medida de tu espacio.'],
+        ['icon' => 'chat', 'name' => 'Campañas y promociones', 'text' => 'Piezas listas para inauguraciones, temporadas y ofertas: impresas y para redes.'],
+        ['icon' => 'soporte', 'name' => 'Instalación', 'text' => 'Instalamos letreros, lonas y vinilos para que todo quede bien puesto.'],
     ],
     'reasons' => [
-        ['title' => 'Un solo proveedor', 'text' => 'Red, seguridad, servidores, equipos y publicidad con el mismo equipo de principio a fin.'],
-        ['title' => 'Instalaciones ordenadas', 'text' => 'Trabajo limpio, etiquetado y documentado para que tu red sea fácil de mantener.'],
-        ['title' => 'Asesoría honesta', 'text' => 'Te recomendamos lo que tu proyecto necesita, sin equipos que no vas a usar.'],
-        ['title' => 'Acompañamiento', 'text' => 'Seguimos contigo después de la instalación con soporte y mantenimiento.'],
+        ['title' => 'Todo en un solo lugar', 'text' => 'Diseño, impresión, rotulación e instalación con el mismo equipo de principio a fin.'],
+        ['title' => 'Ves la prueba antes', 'text' => 'Te enviamos el diseño para que lo apruebes antes de producir.'],
+        ['title' => 'Acabados que duran', 'text' => 'Materiales pensados para interior y exterior, para que tu publicidad luzca por más tiempo.'],
+        ['title' => 'Atención cercana', 'text' => 'Te asesoramos por WhatsApp y coordinamos contigo la entrega o la instalación.'],
     ],
     'steps' => [
-        ['title' => 'Diagnóstico', 'text' => 'Nos cuentas tu necesidad y, si hace falta, visitamos el lugar.'],
-        ['title' => 'Propuesta', 'text' => 'Te enviamos una cotización clara con equipos y tiempos.'],
-        ['title' => 'Instalación', 'text' => 'Ejecutamos el proyecto de forma ordenada y documentada.'],
-        ['title' => 'Soporte', 'text' => 'Te acompañamos con mantenimiento y atención técnica.'],
+        ['title' => 'Nos cuentas tu idea', 'text' => 'Escríbenos qué necesitas, medidas y fecha. Si hace falta, visitamos el lugar.'],
+        ['title' => 'Diseño y prueba', 'text' => 'Preparamos el diseño y te enviamos una prueba para que la apruebes.'],
+        ['title' => 'Producción', 'text' => 'Imprimimos o fabricamos tu pieza con los materiales acordados.'],
+        ['title' => 'Entrega e instalación', 'text' => 'Te la entregamos o la instalamos en tu local o vehículo.'],
     ],
     'sectors' => [
-        ['image' => 'empresas', 'name' => 'Oficinas y corporativos'],
-        ['image' => 'servidores', 'name' => 'Industria y bodegas'],
-        ['image' => 'nosotros', 'name' => 'Comercios y locales'],
-        ['image' => 'hogares', 'name' => 'Hogares y residencias'],
+        ['image' => 'sector_comercios', 'name' => 'Comercios y locales'],
+        ['image' => 'sector_eventos', 'name' => 'Eventos e inauguraciones'],
+        ['image' => 'sector_emprendedores', 'name' => 'Emprendedores'],
+        ['image' => 'sector_empresas', 'name' => 'Empresas e instituciones'],
     ],
     'faq' => [
-        ['q' => '¿Cómo pido una cotización?', 'a' => 'Completa el formulario de contacto o escríbenos por WhatsApp contándonos qué necesitas. Te responderemos con una propuesta.'],
-        ['q' => '¿Cómo compro en la tienda?', 'a' => 'Agrega los productos al carrito y pulsa "Enviar pedido por WhatsApp". Se abrirá un mensaje con tu pedido listo para enviar y coordinamos contigo el pago y la entrega.'],
-        ['q' => '¿Puedo comprar equipos sin contratar la instalación?', 'a' => 'Sí. Puedes comprar solo los equipos o pedirnos también la instalación y configuración.'],
-        ['q' => '¿También hacen publicidad?', 'a' => 'Sí. Hacemos diseño gráfico, impresión, rotulación y material publicitario. Escríbenos por WhatsApp con tu idea y te cotizamos.'],
-        ['q' => '¿Atienden a empresas y a hogares?', 'a' => 'Sí. Trabajamos en oficinas, industrias, comercios y viviendas.'],
-        ['q' => '¿Ofrecen mantenimiento después de la instalación?', 'a' => 'Sí. Ofrecemos soporte técnico y mantenimiento preventivo para tu red, cámaras y servidores.'],
+        ['q' => '¿Cómo pido una cotización?', 'a' => 'Completa el formulario o escríbenos por WhatsApp con lo que necesitas (tipo de trabajo, medidas y cantidad). Te respondemos con una propuesta.'],
+        ['q' => '¿Me ayudan con el diseño?', 'a' => 'Sí. Si no tienes diseño, lo creamos y te enviamos una prueba antes de imprimir. Si ya lo tienes, lo revisamos para que salga bien impreso.'],
+        ['q' => '¿Cómo compro en la tienda?', 'a' => 'Agrega los productos al carrito y pulsa "Enviar pedido por WhatsApp". Se abrirá un mensaje con tu pedido y coordinamos contigo diseño, pago y entrega.'],
+        ['q' => '¿Instalan letreros y rótulos?', 'a' => 'Sí. Coordinamos contigo la visita y la instalación del letrero, la lona o los vinilos.'],
+        ['q' => '¿Cuánto se demora un trabajo?', 'a' => 'Depende del tipo de trabajo y la cantidad. Te damos la fecha de entrega junto con la cotización.'],
     ],
 ];
