@@ -70,11 +70,11 @@ page_header($heading . ' | RedTech', $lead, 'tienda', 'page-shop');
       </aside>
 
       <div class="shop-main">
-        <?php if ($current !== 'publicidad' && isset($categories['publicidad'])): ?>
-          <a class="shop-ads-banner" href="<?= e($link(['categoria' => 'publicidad', 'q' => ''])) ?>">
-            <span class="shop-ads-icon"><?= icon('rotulo') ?></span>
-            <span class="shop-ads-text"><b>¡Haz que tu marca destaque!</b><span>Diseño gráfico, impresión, gigantografías, adhesivos y rótulos.</span></span>
-            <span class="shop-ads-cta">Ver publicidad <?= icon('flecha') ?></span>
+        <?php if ($current !== 'diseno-impresion' && isset($categories['diseno-impresion'])): ?>
+          <a class="shop-mk-banner" href="<?= e($link(['categoria' => 'diseno-impresion', 'q' => ''])) ?>">
+            <span class="shop-mk-icon"><?= icon('rotulo') ?></span>
+            <span class="shop-mk-text"><b>¡Haz que tu marca destaque!</b><span>Diseño gráfico, impresión, gigantografías, adhesivos y rótulos.</span></span>
+            <span class="shop-mk-cta">Ver publicidad <?= icon('flecha') ?></span>
           </a>
         <?php endif; ?>
         <div class="shop-toolbar">

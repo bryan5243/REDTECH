@@ -267,7 +267,7 @@
   });
 
   /* ---------- Carrito ---------- */
-  const KEY = 'redtech_cart_v1';
+  const KEY = 'redtech_cart_marca';
   const money = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
   const save = (items) => { try { localStorage.setItem(KEY, JSON.stringify(items)); } catch { /* sin almacenamiento */ } };

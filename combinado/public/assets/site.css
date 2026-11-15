@@ -683,45 +683,45 @@ html, body { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) { .stock-note.is-low::before { animation: none; } }
 
 /* Publicidad (RedTech Publicidad & Tecnología): acento rojo del logo */
-:root { --ads: #e3262f; --ads-600: #c21820; --ads-grad: linear-gradient(120deg, #e3262f 0%, #ff6a3d 100%); }
-.ads { position: relative; overflow: hidden; background: var(--tint); }
-.ads-glow { position: absolute; inset: -20% -10% auto auto; width: 60%; height: 80%; background: radial-gradient(closest-side, rgb(227 38 47 / .12), transparent); pointer-events: none; }
-.ads .wrap { position: relative; }
-.kicker-ads { color: var(--ads); }
-.kicker-ads::before { background: var(--ads-grad); }
-.ads-grid { display: grid; gap: 1rem; }
-.ad-card { position: relative; padding: 1.7rem 1.5rem 1.5rem; border-radius: var(--radius); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-sm); overflow: hidden; transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s; }
-.ad-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: var(--ads-grad); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease); }
-.ad-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: transparent; }
-.ad-card:hover::before { transform: scaleX(1); }
-.ad-icon { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: 1rem; border-radius: 15px; background: var(--ads-grad); color: #fff; box-shadow: 0 12px 24px -12px rgb(227 38 47 / .8); transition: transform .4s var(--ease); }
-.ad-icon .icon { width: 26px; height: 26px; }
-.ad-card:hover .ad-icon { transform: rotate(-8deg) scale(1.06); }
-.ad-card h3 { font-size: 1.12rem; margin-bottom: .35rem; }
-.ad-card p { margin: 0; font-size: .95rem; color: var(--muted); }
-.ads-combo { display: grid; gap: 1.2rem; align-items: center; margin-top: 1.5rem; padding: 1.6rem; border-radius: var(--radius); background: var(--navy-950); color: rgb(255 255 255 / .78); box-shadow: var(--shadow-lg); }
-.ads-combo h3 { color: #fff; font-size: 1.2rem; margin-bottom: .3rem; }
-.ads-combo p { margin: 0; }
-.ads-combo-icons { display: flex; align-items: center; gap: .5rem; }
-.ads-combo-icons span { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--grad); color: #fff; }
-.ads-combo-icons .ads-red { background: var(--ads-grad); }
-.ads-combo-icons .ads-plus { width: 24px; height: 24px; background: none; color: rgb(255 255 255 / .6); }
-.ads-combo-icons .icon { width: 24px; height: 24px; }
-.ads-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
-.btn-ads { background: var(--ads-grad); color: #fff; box-shadow: 0 8px 22px -8px rgb(227 38 47 / .7); }
-.btn-ads:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -10px rgb(227 38 47 / .8); }
-@media (min-width: 640px) { .ads-grid { grid-template-columns: repeat(2, 1fr); } }
+:root { --mk: #e3262f; --mk-600: #c21820; --mk-grad: linear-gradient(120deg, #e3262f 0%, #ff6a3d 100%); }
+.mk { position: relative; overflow: hidden; background: var(--tint); }
+.mk-glow { position: absolute; inset: -20% -10% auto auto; width: 60%; height: 80%; background: radial-gradient(closest-side, rgb(227 38 47 / .12), transparent); pointer-events: none; }
+.mk .wrap { position: relative; }
+.kicker-mk { color: var(--mk); }
+.kicker-mk::before { background: var(--mk-grad); }
+.mk-grid { display: grid; gap: 1rem; }
+.mk-card { position: relative; padding: 1.7rem 1.5rem 1.5rem; border-radius: var(--radius); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-sm); overflow: hidden; transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s; }
+.mk-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: var(--mk-grad); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease); }
+.mk-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: transparent; }
+.mk-card:hover::before { transform: scaleX(1); }
+.mk-icon { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: 1rem; border-radius: 15px; background: var(--mk-grad); color: #fff; box-shadow: 0 12px 24px -12px rgb(227 38 47 / .8); transition: transform .4s var(--ease); }
+.mk-icon .icon { width: 26px; height: 26px; }
+.mk-card:hover .mk-icon { transform: rotate(-8deg) scale(1.06); }
+.mk-card h3 { font-size: 1.12rem; margin-bottom: .35rem; }
+.mk-card p { margin: 0; font-size: .95rem; color: var(--muted); }
+.mk-combo { display: grid; gap: 1.2rem; align-items: center; margin-top: 1.5rem; padding: 1.6rem; border-radius: var(--radius); background: var(--navy-950); color: rgb(255 255 255 / .78); box-shadow: var(--shadow-lg); }
+.mk-combo h3 { color: #fff; font-size: 1.2rem; margin-bottom: .3rem; }
+.mk-combo p { margin: 0; }
+.mk-combo-icons { display: flex; align-items: center; gap: .5rem; }
+.mk-combo-icons span { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--grad); color: #fff; }
+.mk-combo-icons .mk-red { background: var(--mk-grad); }
+.mk-combo-icons .mk-plus { width: 24px; height: 24px; background: none; color: rgb(255 255 255 / .6); }
+.mk-combo-icons .icon { width: 24px; height: 24px; }
+.mk-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.btn-mk { background: var(--mk-grad); color: #fff; box-shadow: 0 8px 22px -8px rgb(227 38 47 / .7); }
+.btn-mk:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -10px rgb(227 38 47 / .8); }
+@media (min-width: 640px) { .mk-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1000px) {
-  .ads-grid { grid-template-columns: repeat(4, 1fr); }
-  .ads-combo { grid-template-columns: auto 1fr auto; padding: 1.8rem 2rem; }
+  .mk-grid { grid-template-columns: repeat(4, 1fr); }
+  .mk-combo { grid-template-columns: auto 1fr auto; padding: 1.8rem 2rem; }
 }
-.hv-icon-ads { background: var(--ads-grad); }
-.btn-glass-ads .icon { color: #ff6a5f; }
-.shop-ads-banner { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: .9rem 1rem; margin-bottom: 1.5rem; padding: 1.1rem 1.3rem; border-radius: var(--radius); background: radial-gradient(80% 140% at 100% 0%, rgb(227 38 47 / .35), transparent 60%), var(--navy-950); color: rgb(255 255 255 / .78); box-shadow: var(--shadow); transition: transform .3s var(--ease), box-shadow .3s var(--ease); }
-.shop-ads-banner:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-.shop-ads-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--ads-grad); color: #fff; }
-.shop-ads-text b { display: block; font: 700 1.05rem/1.3 var(--head); color: #fff; }
-.shop-ads-text span { font-size: .92rem; }
-.shop-ads-cta { grid-column: 1 / -1; display: inline-flex; align-items: center; gap: .4rem; justify-self: start; padding: .55rem .95rem; border-radius: 10px; background: var(--ads-grad); color: #fff; font-weight: 600; font-size: .9rem; }
-.shop-ads-cta .icon { width: 1em; height: 1em; }
-@media (min-width: 700px) { .shop-ads-banner { grid-template-columns: auto 1fr auto; } .shop-ads-cta { grid-column: auto; } }
+.hv-icon-mk { background: var(--mk-grad); }
+.btn-glass-mk .icon { color: #ff6a5f; }
+.shop-mk-banner { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: .9rem 1rem; margin-bottom: 1.5rem; padding: 1.1rem 1.3rem; border-radius: var(--radius); background: radial-gradient(80% 140% at 100% 0%, rgb(227 38 47 / .35), transparent 60%), var(--navy-950); color: rgb(255 255 255 / .78); box-shadow: var(--shadow); transition: transform .3s var(--ease), box-shadow .3s var(--ease); }
+.shop-mk-banner:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.shop-mk-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--mk-grad); color: #fff; }
+.shop-mk-text b { display: block; font: 700 1.05rem/1.3 var(--head); color: #fff; }
+.shop-mk-text span { font-size: .92rem; }
+.shop-mk-cta { grid-column: 1 / -1; display: inline-flex; align-items: center; gap: .4rem; justify-self: start; padding: .55rem .95rem; border-radius: 10px; background: var(--mk-grad); color: #fff; font-weight: 600; font-size: .9rem; }
+.shop-mk-cta .icon { width: 1em; height: 1em; }
+@media (min-width: 700px) { .shop-mk-banner { grid-template-columns: auto 1fr auto; } .shop-mk-cta { grid-column: auto; } }

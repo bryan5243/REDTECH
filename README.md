@@ -6,7 +6,7 @@ Esta rama junta tres versiones completas del sitio para verlas y decidir cuál e
 |---|---|---|
 | `tecnologia/` | Solo tecnología (sitio actual) | `main` |
 | `combinado/` | Publicidad + tecnología | `claude/project-thread-jwf6vv` |
-| `publicidad/` | Solo publicidad | `claude/redtech-publicidad` |
+| `marca/` | Solo publicidad | `claude/redtech-publicidad` |
 
 `index.html` permite abrir cada una o compararlas lado a lado, en tamaño PC o celular.
 
@@ -23,3 +23,5 @@ Abre http://localhost:8000. Cada versión funciona con su catálogo y datos de e
 Sube todo el contenido de esta rama a `htdocs/` o `public_html/`. La raíz muestra la página para elegir y cada carpeta sirve su sitio.
 
 Esta rama es solo para comparar. Cuando elijas una versión, se fusiona su rama a `main`.
+
+Nota: la carpeta de la versión de solo publicidad se llama `marca/` y las rutas internas evitan la palabra «publicidad», porque los bloqueadores de anuncios del navegador bloquean las direcciones que la contienen.

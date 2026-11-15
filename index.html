@@ -68,7 +68,7 @@
     <span class="tag">Versión 3</span>
     <h2>Solo publicidad</h2>
     <p>RedTech Publicidad: diseño gráfico, impresión y rotulación, con los colores del logo.</p>
-    <div class="links"><a class="btn btn-main" href="publicidad/public/">Abrir sitio</a><a class="btn btn-line" href="publicidad/public/tienda.php">Tienda</a></div>
+    <div class="links"><a class="btn btn-main" href="marca/public/">Abrir sitio</a><a class="btn btn-line" href="marca/public/tienda.php">Tienda</a></div>
   </article>
 </div>
 
@@ -100,7 +100,7 @@
 </section>
 
 <script>
-  const versions = { tecnologia: 'Solo tecnología', combinado: 'Publicidad + tecnología', publicidad: 'Solo publicidad' };
+  const versions = { tecnologia: 'Solo tecnología', combinado: 'Publicidad + tecnología', marca: 'Solo publicidad' };
   const $ = (id) => document.getElementById(id);
   for (const id of ['a', 'b']) {
     for (const [key, label] of Object.entries(versions)) $(id).add(new Option(label, key));

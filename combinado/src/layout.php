@@ -7,7 +7,7 @@ function nav_links(): array
     return [
         'inicio' => [url('./'), 'Inicio'],
         'servicios' => [url('./#servicios'), 'Servicios'],
-        'publicidad' => [url('./#publicidad'), 'Publicidad'],
+        'publicidad' => [url('./#diseno-impresion'), 'Publicidad'],
         'tienda' => [url('tienda.php'), 'Tienda'],
         'nosotros' => [url('./#nosotros'), 'Nosotros'],
         'contacto' => [url('./#contacto'), 'Contacto'],
@@ -40,7 +40,7 @@ function page_header(string $title, string $description, string $active = '', st
   <link rel="icon" href="<?= url('assets/img/favicon.svg') ?>" type="image/svg+xml">
   <link rel="icon" href="<?= url('assets/img/favicon-32.png') ?>" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="<?= url('assets/img/apple-touch-icon.png') ?>">
-  <link rel="stylesheet" href="<?= url('assets/site.css') ?>?v=9">
+  <link rel="stylesheet" href="<?= url('assets/site.css') ?>?v=9x">
   <?= brand_style() ?>
   <script src="<?= url('assets/site.js') ?>?v=6" defer></script>
 </head>
