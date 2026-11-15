@@ -54,7 +54,7 @@ page_header(
         </div>
         <div class="hv-float hv-a"><span class="hv-icon"><?= icon('diseno') ?></span><div><b>Diseño gráfico</b><small>Logos y artes para redes</small></div></div>
         <div class="hv-float hv-b"><span class="hv-icon"><?= icon('imprimir') ?></span><div><b>Gran formato</b><small>Lonas, vinilos y adhesivos</small></div></div>
-        <div class="hv-float hv-c"><span class="hv-icon hv-icon-ads"><?= icon('rotulo') ?></span><div><b>Publicidad y rotulación</b><small>Letreros, vitrinas y vehículos</small></div></div>
+        <div class="hv-float hv-c"><span class="hv-icon hv-icon-mk"><?= icon('rotulo') ?></span><div><b>Publicidad y rotulación</b><small>Letreros, vitrinas y vehículos</small></div></div>
       </div>
     </div>
     <a class="scroll-cue" href="#servicios" aria-label="Bajar a servicios"><span></span></a>

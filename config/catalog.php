@@ -4,7 +4,7 @@
 // reemplázalos por tus productos reales antes de publicar.
 
 // Ilustraciones locales (reemplázalas por fotos de tus trabajos).
-$ad = static fn (string $name): string => 'assets/img/publicidad/' . $name . '.svg';
+$ad = static fn (string $name): string => 'assets/img/marca/' . $name . '.svg';
 
 return [
     'categories' => [

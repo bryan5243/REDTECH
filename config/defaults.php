@@ -36,16 +36,16 @@ return [
     // Imágenes editables: `url` admite una dirección completa o una ruta local como assets/img/foto.webp.
     // Las actuales son ilustraciones de ejemplo: reemplázalas por fotos de tus trabajos desde el panel.
     'images' => [
-        'portada' => ['url' => 'assets/img/publicidad/fondo.svg', 'alt' => 'Fondo con formas de color de la marca'],
-        'portada_tarjeta' => ['url' => 'assets/img/publicidad/portada.svg', 'alt' => 'Letrero, volante, tarjeta y adhesivos de una marca'],
-        'diseno' => ['url' => 'assets/img/publicidad/diseno-logo.svg', 'alt' => 'Logo en diseño en la pantalla'],
-        'impresion' => ['url' => 'assets/img/publicidad/gigantografia.svg', 'alt' => 'Gigantografía impresa en lona'],
-        'rotulacion' => ['url' => 'assets/img/publicidad/rotulo.svg', 'alt' => 'Letrero rotulado en la fachada de un local'],
-        'equipo' => ['url' => 'assets/img/publicidad/vinilos.svg', 'alt' => 'Adhesivos y vinilos impresos'],
-        'sector_comercios' => ['url' => 'assets/img/publicidad/rotulo.svg', 'alt' => 'Fachada de comercio con letrero'],
-        'sector_eventos' => ['url' => 'assets/img/publicidad/gigantografia.svg', 'alt' => 'Lona para inauguración'],
-        'sector_emprendedores' => ['url' => 'assets/img/publicidad/tarjetas.svg', 'alt' => 'Tarjetas de presentación'],
-        'sector_empresas' => ['url' => 'assets/img/publicidad/diseno-logo.svg', 'alt' => 'Diseño de identidad de marca'],
+        'portada' => ['url' => 'assets/img/marca/fondo.svg', 'alt' => 'Fondo con formas de color de la marca'],
+        'portada_tarjeta' => ['url' => 'assets/img/marca/portada.svg', 'alt' => 'Letrero, volante, tarjeta y adhesivos de una marca'],
+        'diseno' => ['url' => 'assets/img/marca/diseno-logo.svg', 'alt' => 'Logo en diseño en la pantalla'],
+        'impresion' => ['url' => 'assets/img/marca/gigantografia.svg', 'alt' => 'Gigantografía impresa en lona'],
+        'rotulacion' => ['url' => 'assets/img/marca/rotulo.svg', 'alt' => 'Letrero rotulado en la fachada de un local'],
+        'equipo' => ['url' => 'assets/img/marca/vinilos.svg', 'alt' => 'Adhesivos y vinilos impresos'],
+        'sector_comercios' => ['url' => 'assets/img/marca/rotulo.svg', 'alt' => 'Fachada de comercio con letrero'],
+        'sector_eventos' => ['url' => 'assets/img/marca/gigantografia.svg', 'alt' => 'Lona para inauguración'],
+        'sector_emprendedores' => ['url' => 'assets/img/marca/tarjetas.svg', 'alt' => 'Tarjetas de presentación'],
+        'sector_empresas' => ['url' => 'assets/img/marca/diseno-logo.svg', 'alt' => 'Diseño de identidad de marca'],
     ],
     'stats' => [
         ['value' => '2 mil', 'label' => 'seguidores en Facebook', 'confirmed' => 1],
