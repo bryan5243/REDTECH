@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparar versiones | RedTech</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root { --ink: #0b1a30; --muted: #64748b; --line: #e3e9f2; --bg: #f3f6fb; --navy: #050f22; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 400 1rem/1.6 "Segoe UI", system-ui, -apple-system, sans-serif; color: var(--ink); background: var(--bg); }
+  header.top { background: var(--navy); color: #fff; padding: 2.2rem 16px 2.6rem; }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  h1 { margin: 0 0 .4rem; font-size: clamp(1.6rem, 4vw, 2.3rem); letter-spacing: -.02em; }
+  header.top p { margin: 0; color: rgb(255 255 255 / .72); max-width: 640px; }
+  .cards { display: grid; gap: 1rem; margin-top: -1.4rem; padding: 0 16px; }
+  .card { display: flex; flex-direction: column; gap: .5rem; padding: 1.4rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); box-shadow: 0 10px 30px -14px rgb(11 26 48 / .25); }
+  .tag { align-self: flex-start; padding: .2rem .65rem; border-radius: 999px; font-size: .78rem; font-weight: 600; color: #fff; }
+  .card h2 { margin: .2rem 0 0; font-size: 1.25rem; }
+  .card p { margin: 0; color: var(--muted); font-size: .95rem; flex: 1; }
+  .card .links { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .6rem; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: .55rem 1rem; border-radius: 11px; font-weight: 600; font-size: .92rem; text-decoration: none; border: 1.5px solid transparent; cursor: pointer; }
+  .btn-main { color: #fff; }
+  .btn-line { color: var(--ink); border-color: var(--line); background: #fff; }
+  .tec .tag, .tec .btn-main { background: linear-gradient(120deg, #1764ff, #19c6e8); }
+  .com .tag, .com .btn-main { background: linear-gradient(120deg, #1764ff, #e3262f); }
+  .pub .tag, .pub .btn-main { background: linear-gradient(120deg, #e3262f, #ff8a3d); }
+  section.compare { padding: 2.4rem 16px 3rem; }
+  section.compare h2 { margin: 0 0 .3rem; font-size: 1.4rem; }
+  section.compare > .wrap > p { margin: 0 0 1rem; color: var(--muted); }
+  .controls { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: 1rem; }
+  select { min-height: 42px; padding: .4rem .7rem; border-radius: 10px; border: 1px solid var(--line); background: #fff; font: inherit; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 11px; overflow: hidden; background: #fff; }
+  .seg button { border: 0; background: none; padding: .55rem .9rem; font: inherit; font-weight: 600; font-size: .9rem; color: var(--muted); cursor: pointer; min-height: 42px; }
+  .seg button[aria-pressed="true"] { background: var(--navy); color: #fff; }
+  .frames { display: grid; gap: 1rem; }
+  .frame { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: .5rem; }
+  .frame b { font-size: .95rem; }
+  .frame iframe { width: 100%; height: 75vh; min-height: 520px; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 10px 30px -18px rgb(11 26 48 / .35); }
+  .phone .frame iframe { width: 390px; max-width: 100%; height: 760px; border-radius: 28px; border: 8px solid var(--navy); }
+  .note { margin-top: 1.6rem; padding: 1rem 1.2rem; border-radius: 14px; background: #fff; border: 1px solid var(--line); color: var(--muted); font-size: .92rem; }
+  @media (min-width: 760px) { .cards { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 900px) { .frames { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <h1>¿Cuál versión del sitio es mejor?</h1>
+    <p>Abre cada versión completa o compáralas lado a lado, en PC o en celular. Todas usan el catálogo y los datos de ejemplo.</p>
+  </div>
+</header>
+
+<div class="wrap cards">
+  <article class="card tec">
+    <span class="tag">Versión 1</span>
+    <h2>Solo tecnología</h2>
+    <p>El sitio actual de RedTech: cableado estructurado, cámaras, servidores y tienda de equipos.</p>
+    <div class="links"><a class="btn btn-main" href="tecnologia/public/">Abrir sitio</a><a class="btn btn-line" href="tecnologia/public/tienda.php">Tienda</a></div>
+  </article>
+  <article class="card com">
+    <span class="tag">Versión 2</span>
+    <h2>Publicidad + tecnología</h2>
+    <p>Las dos empresas juntas: servicios de tecnología y sección de publicidad, con productos de ambas en la tienda.</p>
+    <div class="links"><a class="btn btn-main" href="combinado/public/">Abrir sitio</a><a class="btn btn-line" href="combinado/public/tienda.php">Tienda</a></div>
+  </article>
+  <article class="card pub">
+    <span class="tag">Versión 3</span>
+    <h2>Solo publicidad</h2>
+    <p>RedTech Publicidad: diseño gráfico, impresión y rotulación, con los colores del logo.</p>
+    <div class="links"><a class="btn btn-main" href="publicidad/public/">Abrir sitio</a><a class="btn btn-line" href="publicidad/public/tienda.php">Tienda</a></div>
+  </article>
+</div>
+
+<section class="compare" aria-labelledby="comparar">
+  <div class="wrap">
+    <h2 id="comparar">Comparar lado a lado</h2>
+    <p>Elige dos versiones y la página que quieres ver.</p>
+    <div class="controls">
+      <label class="sr" for="a">Izquierda</label>
+      <select id="a"></select>
+      <span>vs</span>
+      <label class="sr" for="b">Derecha</label>
+      <select id="b"></select>
+      <select id="page" aria-label="Página">
+        <option value="">Inicio</option>
+        <option value="tienda.php">Tienda</option>
+      </select>
+      <div class="seg" role="group" aria-label="Tamaño de pantalla">
+        <button type="button" data-view="pc" aria-pressed="true">PC</button>
+        <button type="button" data-view="phone" aria-pressed="false">Celular</button>
+      </div>
+    </div>
+    <div class="frames" id="frames">
+      <div class="frame"><b id="ta"></b><iframe id="fa" title="Versión izquierda" loading="lazy"></iframe></div>
+      <div class="frame"><b id="tb"></b><iframe id="fb" title="Versión derecha" loading="lazy"></iframe></div>
+    </div>
+    <p class="note">Para ver esta rama en tu computadora: abre una terminal en la carpeta del proyecto, ejecuta <code>php -S localhost:8000</code> y entra a <code>http://localhost:8000</code>. También puedes subir la carpeta completa a tu hosting.</p>
+  </div>
+</section>
+
+<script>
+  const versions = { tecnologia: 'Solo tecnología', combinado: 'Publicidad + tecnología', publicidad: 'Solo publicidad' };
+  const $ = (id) => document.getElementById(id);
+  for (const id of ['a', 'b']) {
+    for (const [key, label] of Object.entries(versions)) $(id).add(new Option(label, key));
+  }
+  $('a').value = 'combinado';
+  $('b').value = 'tecnologia';
+  const load = () => {
+    const page = $('page').value;
+    $('fa').src = $('a').value + '/public/' + page;
+    $('fb').src = $('b').value + '/public/' + page;
+    $('ta').textContent = versions[$('a').value];
+    $('tb').textContent = versions[$('b').value];
+  };
+  ['a', 'b', 'page'].forEach((id) => $(id).addEventListener('change', load));
+  document.querySelectorAll('[data-view]').forEach((btn) => btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    $('frames').classList.toggle('phone', btn.dataset.view === 'phone');
+  }));
+  load();
+</script>
+<style>.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }</style>
+</body>
+</html>
